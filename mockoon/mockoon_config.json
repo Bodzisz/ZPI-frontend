@@ -1,0 +1,107 @@
+{
+  "uuid": "b03490f6-dcd5-45ad-ad0d-41055adcadc6",
+  "lastMigration": 27,
+  "name": "Mockoon config",
+  "endpointPrefix": "api/v1/",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "db04e940-3453-48b9-9027-863672d64814",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "health",
+      "responses": [
+        {
+          "uuid": "1f994be5-2e85-4bf1-80b3-2d6b1aea8c52",
+          "body": "{\n  \"health\": \"OK\" \n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "ecfba3dc-de3b-4841-8114-00e3b9259bc7",
+          "body": "",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "db04e940-3453-48b9-9027-863672d64814"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "*"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
+}
