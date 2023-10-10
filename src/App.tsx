@@ -6,10 +6,7 @@ import {
 } from "@mantine/core";
 import styled from "@emotion/styled";
 import { useEffect } from "react";
-import {
-  getApiUrl,
-  getDefaultResponseHandler,
-} from "./components/api/apiConfig";
+import { checkResponseStatus, getApiUrl } from "./components/api/apiConfig";
 
 const _CenterTitle = styled(Title)`
   display: flex;
@@ -32,9 +29,9 @@ export default function App() {
     fetch(apiUrl + "health", {
       method: "GET",
     })
-      .then(getDefaultResponseHandler)
-      .then((data) => {
-        console.log(`API health: ${data.health}`);
+      .then((response) => {
+        checkResponseStatus(response);
+        console.log("API health: OK");
       })
       .catch(() => {
         console.log("API health: ERROR");
