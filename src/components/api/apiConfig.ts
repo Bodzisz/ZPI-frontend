@@ -8,12 +8,16 @@ export function getApiUrl() {
   }
 }
 
-export const getDefaultResponseHandler = async (
-  response: Response
-): Promise<any> => {
+export const checkResponseStatus = (response: Response): void => {
   const status = response.status;
   if (status < 200 || status >= 300) {
     throw Error();
   }
+};
+
+export const getDefaultResponseHandler = async (
+  response: Response
+): Promise<any> => {
+  checkResponseStatus(response);
   return response.json();
 };
