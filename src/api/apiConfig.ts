@@ -1,4 +1,4 @@
-import { useMockApi } from "../../../package.json";
+import { useMockApi } from "../../package.json";
 
 export function getApiUrl() {
   if (useMockApi) {
