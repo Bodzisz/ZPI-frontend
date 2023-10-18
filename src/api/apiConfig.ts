@@ -1,4 +1,5 @@
 import { useMockApi } from "../../package.json";
+import { FetchError } from "./interfaces/FetchError";
 
 export function getApiUrl() {
   if (useMockApi) {
@@ -11,13 +12,19 @@ export function getApiUrl() {
 export const checkResponseStatus = (response: Response): void => {
   const status = response.status;
   if (status < 200 || status >= 300) {
-    throw Error();
+    const error: FetchError = { status: status };
+    throw error;
   }
 };
 
 export const getDefaultResponseHandler = async (
   response: Response
 ): Promise<any> => {
-  checkResponseStatus(response);
+  const status = response.status;
+  if (status < 200 || status >= 300) {
+    const error: FetchError = { status: status };
+    throw error;
+  }
+  // checkResponseStatus(response);
   return response.json();
 };

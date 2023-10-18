@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { checkResponseStatus, getApiUrl } from "./api/apiConfig";
 import AppHeader from "./components/AppHeader/AppHeader";
 import "@mantine/core/styles.css";
+import ServerError from "./components/ServerError/ServerError";
+import { FetchError } from "./api/interfaces/FetchError";
 
 const theme = createTheme({
   primaryColor: "cyan",
@@ -27,6 +29,7 @@ const CenterTitle = createPolymorphicComponent<"title", TitleProps>(
 
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(1);
+  const [fetchErrorStatus, setFetchErrorStatus] = useState<number | null>(null);
 
   useEffect(() => {
     logApiHealth();
@@ -56,15 +59,22 @@ export default function App() {
         checkResponseStatus(response);
         console.log("API health: OK");
       })
-      .catch(() => {
+      .catch((error: FetchError) => {
         console.log("API health: ERROR");
+        setFetchErrorStatus(error.status);
       });
   };
 
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
       <AppHeader selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-      <div>{getContent()}</div>
+      <div>
+        {fetchErrorStatus === null ? (
+          getContent()
+        ) : (
+          <ServerError status={fetchErrorStatus} />
+        )}
+      </div>
     </MantineProvider>
   );
 }

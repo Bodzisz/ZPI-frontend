@@ -7,17 +7,11 @@ import {
   Drawer,
   ScrollArea,
   Title,
-  useMantineTheme,
   Flex,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./AppHeader.module.css";
 import ThemeSwitchButton from "../ThemeSwitchButton/ThemeSwitchButton";
-import styled from "@emotion/styled";
-
-const SelectedLink = styled.a`
-  border-bottom: 0.1rem solid ${(p) => p.theme.primaryColor} !important;
-`;
 
 const contentPages = [
   {
@@ -42,28 +36,19 @@ interface AppHeaderProps {
 const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  const theme = useMantineTheme();
 
   const getHeaderTabs = () => {
     return (
       <>
         {contentPages.map((page) => {
-          if (page.id === selectedTab) {
-            return (
-              <SelectedLink
-                theme={theme}
-                className={classes.link}
-                onClick={() => setSelectedTab(page.id)}
-                key={page.id}
-              >
-                {page.title}
-              </SelectedLink>
-            );
-          }
           return (
             <a
               href="#"
-              className={classes.link}
+              className={
+                page.id === selectedTab
+                  ? `${classes.link} ${classes.selectedLink}`
+                  : classes.link
+              }
               onClick={() => setSelectedTab(page.id)}
               key={page.id}
             >

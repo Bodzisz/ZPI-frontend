@@ -17,7 +17,7 @@
       "responses": [
         {
           "uuid": "1f994be5-2e85-4bf1-80b3-2d6b1aea8c52",
-          "body": "{\n  \"health\": \"OK\" \n}",
+          "body": "",
           "latency": 0,
           "statusCode": 200,
           "label": "",
@@ -30,13 +30,114 @@
           "rulesOperator": "OR",
           "disableTemplating": false,
           "fallbackTo404": false,
-          "default": false
+          "default": true
         },
         {
           "uuid": "ecfba3dc-de3b-4841-8114-00e3b9259bc7",
           "body": "",
           "latency": 0,
           "statusCode": 500,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "a2096cec-3881-4fd5-a900-f7ffb0acab26",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "attractions",
+      "responses": [
+        {
+          "uuid": "06154510-2b1c-4896-93c8-2a9dff20a059",
+          "body": "[\n  {\n    \"id\": 1,\n    \"title\": \"Przyklad\",\n    \"type\": \"Natura\",\n    \"description\": \"To jest przykladowy opis\",\n    \"picture\": \"123\",\n    \"x\": 15.65621,\n    \"y\": 12.53254\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Przyklad 2\",\n    \"type\": \"Natura\",\n    \"description\": \"To jest przykladowy opis 2\",\n    \"picture\": \"123\",\n    \"x\": 15.65621,\n    \"y\": 12.53254\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "5a90a94f-1277-41c6-b349-8193e572cea0",
+          "body": "[{}]",
+          "latency": 0,
+          "statusCode": 500,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "fa6d74d2-e27c-4ce5-a87b-f85d08f77fb4",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "districts",
+      "responses": [
+        {
+          "uuid": "ee845e4d-452b-40ac-8090-5054fbb6ca49",
+          "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"walbrzyskie\",\n    \"city\": \"Walbrzych\",\n    \"postalCode\": \"50-340\"\n  },\n  {\n    \"id\": 2,\n    \"name\": \"wroclawiski\",\n    \"city\": \"Wroclaw\",\n    \"postalCode\": \"50-450\"\n  }\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "acc68be1-b1d0-429a-bd6f-2b965dfecfea",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "attractions/:id",
+      "responses": [
+        {
+          "uuid": "7a20b8dd-070d-41bd-aea9-b396463ce779",
+          "body": "{\n    \"id\": 1,\n    \"title\": \"Przyklad\",\n    \"type\": \"Natura\",\n    \"description\": \"To jest przykladowy opis\",\n    \"picture\": \"123\",\n    \"x\": 15.65621,\n    \"y\": 12.53254\n}",
+          "latency": 0,
+          "statusCode": 200,
           "label": "",
           "headers": [],
           "bodyType": "INLINE",
@@ -58,6 +159,18 @@
     {
       "type": "route",
       "uuid": "db04e940-3453-48b9-9027-863672d64814"
+    },
+    {
+      "type": "route",
+      "uuid": "a2096cec-3881-4fd5-a900-f7ffb0acab26"
+    },
+    {
+      "type": "route",
+      "uuid": "fa6d74d2-e27c-4ce5-a87b-f85d08f77fb4"
+    },
+    {
+      "type": "route",
+      "uuid": "acc68be1-b1d0-429a-bd6f-2b965dfecfea"
     }
   ],
   "proxyMode": false,
