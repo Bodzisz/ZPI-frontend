@@ -9,9 +9,12 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { checkResponseStatus, getApiUrl } from "./api/apiConfig";
 import AppHeader from "./components/AppHeader/AppHeader";
+import LandingPage from "./components/LandingPage/LandingPage";
 import "@mantine/core/styles.css";
 import ServerError from "./components/ServerError/ServerError";
 import { FetchError } from "./api/interfaces/FetchError";
+import { FooterCentered } from "./components/Footer/Footer";
+import AttractionsPage from "./components/AttractionsPage/AttractionsPage";
 
 const theme = createTheme({
   primaryColor: "cyan",
@@ -39,9 +42,9 @@ export default function App() {
   const getContent = () => {
     switch (selectedTab) {
       case 1:
-        return <CenterTitle>Strona główna</CenterTitle>;
+        return <LandingPage/>;
       case 2:
-        return <CenterTitle>Atrakcje</CenterTitle>;
+        return <AttractionsPage/>;
       case 3:
         return <CenterTitle>Kontakt</CenterTitle>;
       default:
@@ -54,6 +57,7 @@ export default function App() {
     console.log(`API URL: ${apiUrl}`);
     fetch(apiUrl + "health", {
       method: "GET",
+      mode: "no-cors",
     })
       .then((response) => {
         checkResponseStatus(response);
@@ -75,6 +79,7 @@ export default function App() {
           <ServerError status={fetchErrorStatus} />
         )}
       </div>
+      <div><FooterCentered></FooterCentered></div>
     </MantineProvider>
   );
 }
