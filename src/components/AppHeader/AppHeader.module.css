@@ -29,3 +29,7 @@
     );
   }
 }
+
+.selectedLink {
+  border-bottom: 0.1rem solid var(--mantine-primary-color-filled) !important;
+}
