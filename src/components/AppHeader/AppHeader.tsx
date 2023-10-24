@@ -74,7 +74,7 @@ const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
           <Group>
-            <Title>Co-robić.pl</Title>
+            <Title>Miejscownik.pl</Title>
             <ThemeSwitchButton />
           </Group>
 
@@ -106,7 +106,7 @@ const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
       >
         <ScrollArea h={`100%`} mx="-md">
           <Group>
-            <Title pl={10}>Co-robić.pl</Title>
+            <Title pl={10}>Miejscownik.pl</Title>
             <ThemeSwitchButton />
           </Group>
           <Divider my="sm" />
