@@ -42,9 +42,9 @@ export default function App() {
   const getContent = () => {
     switch (selectedTab) {
       case 1:
-        return <LandingPage/>;
+        return <LandingPage />;
       case 2:
-        return <AttractionsPage/>;
+        return <AttractionsPage />;
       case 3:
         return <CenterTitle>Kontakt</CenterTitle>;
       default:
@@ -57,11 +57,11 @@ export default function App() {
     console.log(`API URL: ${apiUrl}`);
     fetch(apiUrl + "health", {
       method: "GET",
-      mode: "no-cors",
     })
       .then((response) => {
         checkResponseStatus(response);
         console.log("API health: OK");
+        setFetchErrorStatus(null);
       })
       .catch((error: FetchError) => {
         console.log("API health: ERROR");
@@ -79,7 +79,9 @@ export default function App() {
           <ServerError status={fetchErrorStatus} />
         )}
       </div>
-      <div><FooterCentered></FooterCentered></div>
+      <div>
+        <FooterCentered></FooterCentered>
+      </div>
     </MantineProvider>
   );
 }
