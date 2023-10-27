@@ -1,26 +1,62 @@
-import { AttractionCard } from '../AttractionCard/AttractionCard';
+import { useEffect, useState } from "react";
+import { AttractionCard } from "../AttractionCard/AttractionCard";
+import { fetchAtrractions } from "../../api/apiFetchRequests";
+import { FetchError } from "../../api/interfaces/FetchError";
+import { Attraction } from "../../api/interfaces/Attraction";
+import { SimpleGrid, Loader, Center } from "@mantine/core";
+import ServerError from "../ServerError/ServerError";
 
 const AttractionsPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [errorStatus, setErorrStatus] = useState<number | null>(null);
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
 
-  return (<>
+  useEffect(() => {
+    fetchAtrractions()
+      .then((data) => {
+        setAttractions(data);
+      })
+      .catch((error: FetchError) => {
+        setErorrStatus(error.status);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
-    <div style={{ display: 'flex', justifyContent: 'center', gap: '100px', paddingBottom: 20 }}>
-      <AttractionCard imgSrc="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80" alt="Norway" title="Norway Fjord" />
-      <AttractionCard imgSrc="https://retailnet.pl/wp-content/uploads/2023/01/pizza-hut-2-1068x600.jpg" alt="Norway" title="Pizza Hut" />
-      <AttractionCard imgSrc="https://www.travelandleisure.com/thmb/rbPz5_6COrWFh94qFRHYLJrRM-g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/iguazu-falls-argentina-brazil-MOSTBEAUTIFUL0921-e967cc4764ca4eb2b9941bd1b48d64b5.jpg" alt="Norway" title="Beautiful Place" />
-      <AttractionCard imgSrc="https://images.travelandleisureasia.com/wp-content/uploads/sites/3/2023/05/08123654/lake-como.jpeg" alt="Norway" title="Beautiful Place" />
-    </div>
+  const getAttractionsList = () => {
+    return (
+      <Center>
+        <SimpleGrid
+          cols={{ base: 1, sm: 2, lg: 4 }}
+          spacing={{ base: 10, sm: "xl" }}
+          verticalSpacing={{ base: "md", sm: "xl" }}
+        >
+          {attractions.map((attraction) => {
+            return <AttractionCard attraction={attraction}></AttractionCard>;
+          })}
+        </SimpleGrid>
+      </Center>
+    );
+  };
 
-    <div style={{ display: 'flex', justifyContent: 'center', gap: '100px', paddingBottom: 20 }}>
-      <AttractionCard imgSrc="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80" alt="Norway" title="Norway Fjord" />
-      <AttractionCard imgSrc="https://retailnet.pl/wp-content/uploads/2023/01/pizza-hut-2-1068x600.jpg" alt="Norway" title="Pizza Hut" />
-      <AttractionCard imgSrc="https://www.travelandleisure.com/thmb/rbPz5_6COrWFh94qFRHYLJrRM-g=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/iguazu-falls-argentina-brazil-MOSTBEAUTIFUL0921-e967cc4764ca4eb2b9941bd1b48d64b5.jpg" alt="Norway" title="Beautiful Place" />
-      <AttractionCard imgSrc="https://images.travelandleisureasia.com/wp-content/uploads/sites/3/2023/05/08123654/lake-como.jpeg" alt="Norway" title="Beautiful Place" />
-    </div>
+  const getContent = () => {
+    if (errorStatus !== null) {
+      return <ServerError status={errorStatus} />;
+    } else if (isLoading) {
+      return (
+        <>
+          <Center style={{ height: "50%" }}>
+            <Loader color="blue" />
+          </Center>
+        </>
+      );
+    } else {
+      return getAttractionsList();
+    }
+  };
 
-    
-  </>
-  );
+  return <div style={{ height: "100vh" }}>{getContent()}</div>;
 };
 
 export default AttractionsPage;
