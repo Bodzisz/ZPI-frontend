@@ -1,9 +1,16 @@
+import { AttractionType } from "./AttractionType";
+import { City } from "./City";
+import { District } from "./District";
+
 export interface Attraction {
   id: number;
   title: string;
   type: string;
   description: string;
   picture: string;
-  x: number;
-  y: number;
+  attractionType: AttractionType;
+  district: District;
+  city: City;
+  xcoordinate: number;
+  ycoordinate: number;
 }

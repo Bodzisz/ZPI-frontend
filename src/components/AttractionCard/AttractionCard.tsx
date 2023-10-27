@@ -1,49 +1,57 @@
-import React from 'react';
-import { Text, Image, Card, Group, Badge, Button } from '@mantine/core';
+import React from "react";
+import { Text, Image, Card, Group, Badge, Button } from "@mantine/core";
+import { Attraction } from "../../api/interfaces/Attraction";
 
 interface AttractionCardProps {
-  imgSrc: string;
-  alt: string
-  title: string
-  
+  attraction: Attraction;
 }
 
-const AttractionCard: React.FC<AttractionCardProps> = ({ imgSrc, alt, title}) => {
+const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
   return (
-    <div style={{width: 300}}>
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card
+      style={{ width: 300, height: 420 }}
+      shadow="sm"
+      padding="lg"
+      radius="md"
+      withBorder
+      pos={"relative"}
+    >
       <Card.Section>
         <Image
-          src={imgSrc}
+          src={`data:image/png;base64,${attraction.picture}`}
           height={160}
           width={200}
-          alt={alt}
+          alt={attraction.title}
         />
       </Card.Section>
-      
 
       <Group justify="space-between" mt="md" mb="xs">
-        <Text fw={500}>{title}</Text>
+        <Text fw={500}>{attraction.title}</Text>
         <Badge color="green" variant="light">
-          Otwarte
+          {attraction.attractionType.attractionType}
         </Badge>
       </Group>
 
-      <Text size="sm" c="dimmed">
-        With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-        activities on and around the fjords of Norway
-      </Text>
+      <div>
+        <Text size="sm" c="dimmed" lineClamp={5}>
+          {attraction.description}
+        </Text>
+      </div>
 
-      <Button variant="light" color="blue" fullWidth mt="md" radius="md">
-        Book classic tour now
-      </Button>
+      <div>
+        <Group
+          bottom={0}
+          pos={"absolute"}
+          justify="center"
+          pb={"10px"}
+          w={"258px"}
+        >
+          <Button variant="light" color="blue" radius="md">
+            Zobacz więcej
+          </Button>
+        </Group>
+      </div>
     </Card>
-    </div>
   );
 };
 export { AttractionCard };
-
-
-
-
-
