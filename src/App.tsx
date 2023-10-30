@@ -15,6 +15,7 @@ import ServerError from "./components/ServerError/ServerError";
 import { FetchError } from "./api/interfaces/FetchError";
 import { FooterCentered } from "./components/Footer/Footer";
 import AttractionsPage from "./components/AttractionsPage/AttractionsPage";
+import "@mantine/carousel/styles.css";
 
 const theme = createTheme({
   primaryColor: "cyan",

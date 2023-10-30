@@ -6,7 +6,7 @@
   background-size: cover;
 
   @media (max-width: $mantine-breakpoint-sm) {
-    height: 100vh;
+    height: auto !important;
     background-repeat: no-repeat !important;
     background-size: cover !important;
     background-attachment: fixed !important;
@@ -14,7 +14,7 @@
 }
 
 .content {
-  padding-top: 50px;
+  padding-top: 25px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -22,7 +22,7 @@
 
 .title {
   font-family: Greycliff CF, var(--mantine-font-family);
-  font-size: rem(62px);
+  font-size: rem(50px);
   font-weight: 900;
   line-height: 1.1;
   margin: 0;

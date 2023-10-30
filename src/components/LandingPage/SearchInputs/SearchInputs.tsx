@@ -1,74 +1,60 @@
 import React, { ChangeEventHandler } from "react";
-import { TextInput, Button } from "@mantine/core";
+import {
+  TextInput,
+  Button,
+  Group,
+  SegmentedControl,
+  useMantineTheme,
+} from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
-interface CitySearchInputProps {
+interface SearchInputProps {
   value: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  searchType: string;
+  setSearchType: (value: string) => void;
 }
 
-const CitySearchInput: React.FC<CitySearchInputProps> = ({
+const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChange,
+  searchType,
+  setSearchType,
 }) => {
+  const theme = useMantineTheme();
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+
   const handleSearch = () => {
     //search logic
   };
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <TextInput
-          label="Miasta"
-          placeholder="Wyszukaj miasto"
-          value={value}
-          onChange={onChange}
-          c={"white"}
-        />
-        <Button
-          variant="filled"
-          size="sm"
-          style={{ marginLeft: "8px", marginTop: "25px" }}
-          onClick={handleSearch}
-        >
-          Szukaj
-        </Button>
-      </div>
-    </div>
+    <Group justify="center">
+      <SegmentedControl
+        value={searchType}
+        onChange={setSearchType}
+        data={[
+          { label: "Atrakcje", value: "atrakcje" },
+          { label: "Miasta", value: "miasta" },
+        ]}
+      />
+      <TextInput
+        placeholder="Wpisz szukaną frazę"
+        value={value}
+        onChange={onChange}
+        maw={"650px"}
+        w={mobile ? "80%" : "80vh"}
+        wrapperProps={{ paddingLeft: "0" }}
+      />
+      <Button
+        variant="filled"
+        size="sm"
+        style={{ marginLeft: "8px" }}
+        onClick={handleSearch}
+      >
+        Szukaj
+      </Button>
+    </Group>
   );
 };
 
-interface AttractionSearchInputProps {
-  value: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-}
-
-const AttractionSearchInput: React.FC<AttractionSearchInputProps> = ({
-  value,
-  onChange,
-}) => {
-  const handleSearch = () => {
-    //search logic
-  };
-  return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <TextInput
-          label="Atrakcje"
-          placeholder="Wyszukaj atrakcje"
-          value={value}
-          onChange={onChange}
-          c={"white"}
-        />
-        <Button
-          variant="filled"
-          size="sm"
-          style={{ marginLeft: "8px", marginTop: "25px" }}
-          onClick={handleSearch}
-        >
-          Szukaj
-        </Button>
-      </div>
-    </div>
-  );
-};
-
-export { CitySearchInput, AttractionSearchInput };
+export { SearchInput };
