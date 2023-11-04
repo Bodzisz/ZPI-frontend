@@ -1,67 +1,126 @@
-import { useState } from "react";
-import { Container, Paper, Text } from "@mantine/core";
+import { useState, useEffect } from "react";
 import {
-  CitySearchInput,
-  AttractionSearchInput,
-} from "./SearchInputs/SearchInputs";
+  Center,
+  Container,
+  Text,
+  useMantineTheme,
+  Loader,
+} from "@mantine/core";
+import { SearchInput } from "./SearchInputs/SearchInputs";
+import classes from "./LandingPage.module.css";
+import { Carousel } from "@mantine/carousel";
+import { useMediaQuery } from "@mantine/hooks";
+import { Attraction } from "../../api/interfaces/Attraction";
+import { fetchAtrractions } from "../../api/apiFetchRequests";
+import CarouselCard from "./CarouselCard/CarouselCard";
 
 const LandingPage = () => {
-  const [cityQuery, setCityQuery] = useState("");
-  const [attractionQuery, setAttractionQuery] = useState("");
+  const [query, setQuery] = useState("");
+  const [searchType, setSerachType] = useState("atrakcje");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const theme = useMantineTheme();
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
-  const handleCitySearch = (value: string) => {
-    setCityQuery(value);
+  useEffect(() => {
+    fetchAtrractions()
+      .then((data) => {
+        setAttractions(data.slice(0, 9));
+      })
+      .catch(() => {
+        setIsError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  const handleSearch = (value: string) => {
+    setQuery(value);
   };
 
-  const handleAttractionSearch = (value: string) => {
-    setAttractionQuery(value);
+  const getCarouselSlides = () => {
+    return attractions.map((attraction) => (
+      <Carousel.Slide key={attraction.id}>
+        <CarouselCard
+          image={`data:image/png;base64,${attraction.picture}`}
+          title={attraction.title}
+        />
+      </Carousel.Slide>
+    ));
+  };
+
+  const getCarousel = () => {
+    if (isLoading) {
+      return (
+        <Center>
+          <Loader />
+        </Center>
+      );
+    } else if (isError) {
+      console.log("Error loading carousel attractions");
+      return <></>;
+    } else {
+      return (
+        <Carousel
+          slideSize={{ base: "100%", sm: "50%", md: "33.333333%" }}
+          slideGap={{ base: 0, sm: "xs" }}
+          withIndicators
+          align="center"
+          slidesToScroll={mobile ? 1 : 3}
+          pt={"20px"}
+          orientation="horizontal"
+          loop
+        >
+          {getCarouselSlides()}
+        </Carousel>
+      );
+    }
   };
 
   return (
-    <>
-      <Text
-        size="s"
-        style={{
-          paddingLeft: "300px",
-          paddingRight: "300px",
-          paddingBottom: "50px",
-          paddingTop: "20px",
-        }}
-      >
-        Witaj na stronie internetowej poświęconej atrakcjom Dolnego Śląska!
-        Odkryj piękno naszego regionu, pełnego historycznych zabytków,
-        malowniczych krajobrazów i niezwykłych atrakcji. Dolny Śląsk zachwyca
-        swoją różnorodnością, od urokliwych miast i wsi po przyrodnicze cuda.
-      </Text>
-
-      <div style={{ display: "flex", justifyContent: "center", gap: "200px" }}>
-        <Paper>
-          <Container size="lg">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "200px",
-                paddingBottom: 60,
-              }}
+    <div className={classes.headerPic}>
+      <div className={classes.content}>
+        <h1 className={classes.title}>
+          <Center>
+            <Text
+              pl={"7px"}
+              component="span"
+              inherit
+              variant="gradient"
+              gradient={{ from: "cyan", to: "white" }}
             >
-              <CitySearchInput
-                value={cityQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-                  handleCitySearch(e.target.value)
-                }
-              />
-              <AttractionSearchInput
-                value={attractionQuery}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-                  handleAttractionSearch(e.target.value)
-                }
-              />
-            </div>
-          </Container>
-        </Paper>
+              Znajdź z nami atrakcje!
+            </Text>
+          </Center>
+        </h1>
+
+        <Container size={"md"} pt={"50px"} pb={"50px"}>
+          <Text size="m" c={"white"}>
+            Witaj na stronie internetowej poświęconej atrakcjom Dolnego Śląska!
+            Odkryj piękno naszego regionu, pełnego historycznych zabytków,
+            malowniczych krajobrazów i niezwykłych atrakcji. Dolny Śląsk
+            zachwyca swoją różnorodnością, od urokliwych miast i wsi po
+            przyrodnicze cuda.
+          </Text>
+        </Container>
+
+        <Center>
+          <SearchInput
+            value={query}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
+              handleSearch(e.target.value)
+            }
+            searchType={searchType}
+            setSearchType={setSerachType}
+          />
+        </Center>
       </div>
-    </>
+      <Container size={"md"} pt={"50px"} className={classes.carouselContainer}>
+        {getCarousel()}
+      </Container>
+    </div>
   );
 };
 

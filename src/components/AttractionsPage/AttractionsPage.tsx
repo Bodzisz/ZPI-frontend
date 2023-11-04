@@ -56,7 +56,9 @@ const AttractionsPage = () => {
     }
   };
 
-  return <div style={{ height: "100vh" }}>{getContent()}</div>;
+  return (
+    <div style={{ height: "100vh", paddingTop: "30px" }}>{getContent()}</div>
+  );
 };
 
 export default AttractionsPage;

@@ -1,12 +1,13 @@
-import { Anchor, Group, Container } from '@mantine/core';
-import './Footer.css';
+import { Anchor, Group, Container, Image } from "@mantine/core";
+import "./Footer.css";
+import logo from "../../img/logo.png";
 
 const links = [
-  { link: '#', label: 'Zgłoś awarię' },
-  { link: '#', label: 'Zgłoś nadużycie' },
-  { link: '#', label: 'Kontakt' },
-  { link: '#', label: 'O autorach' },
-  { link: '#', label: 'Coś więcej nw' },
+  { link: "#", label: "Zgłoś awarię" },
+  { link: "#", label: "Zgłoś nadużycie" },
+  { link: "#", label: "Kontakt" },
+  { link: "#", label: "O autorach" },
+  { link: "#", label: "Coś więcej nw" },
 ];
 
 export function FooterCentered() {
@@ -24,9 +25,9 @@ export function FooterCentered() {
   ));
 
   return (
-    <div className="footer" >
+    <div className="footer">
       <Container className="inner">
-        LOGO
+        <Image src={logo} h={40} w={40} />
         <Group className="links">{items}</Group>
       </Container>
     </div>

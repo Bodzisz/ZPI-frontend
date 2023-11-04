@@ -8,10 +8,12 @@ import {
   ScrollArea,
   Title,
   Flex,
+  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./AppHeader.module.css";
 import ThemeSwitchButton from "../ThemeSwitchButton/ThemeSwitchButton";
+import logo from "../../img/logo.png";
 
 const contentPages = [
   {
@@ -74,6 +76,7 @@ const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
           <Group>
+            <Image src={logo} h={60} w={60} visibleFrom="sm" />
             <Title>Miejscownik.pl</Title>
             <ThemeSwitchButton />
           </Group>
@@ -106,6 +109,7 @@ const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
       >
         <ScrollArea h={`100%`} mx="-md">
           <Group>
+            <Image src={logo} h={40} w={40} pl={10} />
             <Title pl={10}>Miejscownik.pl</Title>
             <ThemeSwitchButton />
           </Group>
@@ -133,7 +137,7 @@ const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
   };
 
   return (
-    <Box pb={120}>
+    <Box>
       {getDefaultHeader()}
       {getHeaderForSmallScreens()}
     </Box>
