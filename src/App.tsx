@@ -11,11 +11,10 @@ import { checkResponseStatus, getApiUrl } from "./api/apiConfig";
 import AppHeader from "./components/AppHeader/AppHeader";
 import LandingPage from "./components/LandingPage/LandingPage";
 import "@mantine/core/styles.css";
-import ServerError from "./components/ServerError/ServerError";
-import { FetchError } from "./api/interfaces/FetchError";
 import { FooterCentered } from "./components/Footer/Footer";
 import AttractionsPage from "./components/AttractionsPage/AttractionsPage";
 import "@mantine/carousel/styles.css";
+import AttractionsMap from "./components/AttractionsMap/AttractionsMap";
 
 const theme = createTheme({
   primaryColor: "cyan",
@@ -33,7 +32,6 @@ const CenterTitle = createPolymorphicComponent<"title", TitleProps>(
 
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(1);
-  const [fetchErrorStatus, setFetchErrorStatus] = useState<number | null>(null);
 
   useEffect(() => {
     logApiHealth();
@@ -47,6 +45,8 @@ export default function App() {
       case 2:
         return <AttractionsPage />;
       case 3:
+        return <AttractionsMap />;
+      case 4:
         return <CenterTitle>Kontakt</CenterTitle>;
       default:
         return <></>;
@@ -62,23 +62,17 @@ export default function App() {
       .then((response) => {
         checkResponseStatus(response);
         console.log("API health: OK");
-        setFetchErrorStatus(null);
       })
-      .catch((error: FetchError) => {
+      .catch(() => {
         console.log("API health: ERROR");
-        setFetchErrorStatus(error.status);
       });
   };
 
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
       <AppHeader selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-      <div>
-        {fetchErrorStatus === null ? (
-          getContent()
-        ) : (
-          <ServerError status={fetchErrorStatus} />
-        )}
+      <div style={{ width: "100%", height: "calc(100vh - 155px)" }}>
+        {getContent()}
       </div>
       <div>
         <FooterCentered></FooterCentered>

@@ -26,6 +26,10 @@ const contentPages = [
   },
   {
     id: 3,
+    title: "Mapa",
+  },
+  {
+    id: 4,
     title: "Kontakt",
   },
 ];

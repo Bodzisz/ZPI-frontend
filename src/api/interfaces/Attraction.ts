@@ -14,3 +14,12 @@ export interface Attraction {
   xcoordinate: number;
   ycoordinate: number;
 }
+
+export interface AttractionList {
+  content: Attraction[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+  numberOfElements: number;
+}

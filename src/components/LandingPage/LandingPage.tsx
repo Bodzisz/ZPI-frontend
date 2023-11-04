@@ -13,6 +13,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { Attraction } from "../../api/interfaces/Attraction";
 import { fetchAtrractions } from "../../api/apiFetchRequests";
 import CarouselCard from "./CarouselCard/CarouselCard";
+import { FetchError } from "../../api/interfaces/FetchError";
 
 const LandingPage = () => {
   const [query, setQuery] = useState("");
@@ -26,9 +27,12 @@ const LandingPage = () => {
   useEffect(() => {
     fetchAtrractions()
       .then((data) => {
-        setAttractions(data.slice(0, 9));
+        setAttractions(data.content.slice(0, 9));
       })
-      .catch(() => {
+      .catch((error: FetchError) => {
+        console.log(
+          `Error during fetching carousel attractions (status: ${error.status})`
+        );
         setIsError(true);
       })
       .finally(() => {
@@ -59,7 +63,6 @@ const LandingPage = () => {
         </Center>
       );
     } else if (isError) {
-      console.log("Error loading carousel attractions");
       return <></>;
     } else {
       return (

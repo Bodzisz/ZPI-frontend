@@ -3,7 +3,7 @@ import { AttractionCard } from "../AttractionCard/AttractionCard";
 import { fetchAtrractions } from "../../api/apiFetchRequests";
 import { FetchError } from "../../api/interfaces/FetchError";
 import { Attraction } from "../../api/interfaces/Attraction";
-import { SimpleGrid, Loader, Center } from "@mantine/core";
+import { SimpleGrid, Loader, Center, Container } from "@mantine/core";
 import ServerError from "../ServerError/ServerError";
 
 const AttractionsPage = () => {
@@ -14,7 +14,7 @@ const AttractionsPage = () => {
   useEffect(() => {
     fetchAtrractions()
       .then((data) => {
-        setAttractions(data);
+        setAttractions(data.content);
       })
       .catch((error: FetchError) => {
         setErorrStatus(error.status);
@@ -42,7 +42,11 @@ const AttractionsPage = () => {
 
   const getContent = () => {
     if (errorStatus !== null) {
-      return <ServerError status={errorStatus} />;
+      return (
+        <Container pt={"10%"}>
+          <ServerError status={errorStatus} />
+        </Container>
+      );
     } else if (isLoading) {
       return (
         <>
