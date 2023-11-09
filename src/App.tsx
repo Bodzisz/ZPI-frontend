@@ -4,6 +4,7 @@ import {
   TitleProps,
   createPolymorphicComponent,
   createTheme,
+  AppShell,
 } from "@mantine/core";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -70,13 +71,27 @@ export default function App() {
 
   return (
     <MantineProvider theme={theme} defaultColorScheme="auto">
-      <AppHeader selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
-      <div style={{ width: "100%", height: "calc(100vh - 155px)" }}>
-        {getContent()}
-      </div>
-      <div>
-        <FooterCentered></FooterCentered>
-      </div>
+      <AppShell
+        footer={{
+          collapsed: false,
+          height: "80px",
+          offset: false,
+        }}
+      >
+        <AppHeader selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        <AppShell.Main
+          style={{
+            width: "100%",
+            minHeight: "calc(100vh - 155px)",
+          }}
+          pos={"relative"}
+        >
+          {getContent()}
+        </AppShell.Main>
+        <AppShell.Footer>
+          <FooterCentered />
+        </AppShell.Footer>
+      </AppShell>
     </MantineProvider>
   );
 }

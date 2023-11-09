@@ -6,8 +6,10 @@ import { District } from "./interfaces/District";
 
 const apiUrl = getApiUrl();
 
-export const fetchAtrractions = async (): Promise<AttractionList> => {
-  return fetch(apiUrl + "attractions", { method: "GET" }).then(
+export const fetchAtrractionsByPage = async (
+  page: number
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions?page=${page}`, { method: "GET" }).then(
     getDefaultResponseHandler
   );
 };

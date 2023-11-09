@@ -11,7 +11,7 @@ import classes from "./LandingPage.module.css";
 import { Carousel } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
 import { Attraction } from "../../api/interfaces/Attraction";
-import { fetchAtrractions } from "../../api/apiFetchRequests";
+import { fetchAtrractionsByPage } from "../../api/apiFetchRequests";
 import CarouselCard from "./CarouselCard/CarouselCard";
 import { FetchError } from "../../api/interfaces/FetchError";
 
@@ -25,7 +25,7 @@ const LandingPage = () => {
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   useEffect(() => {
-    fetchAtrractions()
+    fetchAtrractionsByPage(0)
       .then((data) => {
         setAttractions(data.content.slice(0, 9));
       })
