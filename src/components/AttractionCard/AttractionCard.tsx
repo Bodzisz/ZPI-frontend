@@ -4,9 +4,10 @@ import { Attraction } from "../../api/interfaces/Attraction";
 
 interface AttractionCardProps {
   attraction: Attraction;
+  onLookUp: any
 }
 
-const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
+const AttractionCard: React.FC<AttractionCardProps> = ({ attraction, onLookUp}) => {
   return (
     <Card
       style={{ width: 300, height: 420 }}
@@ -28,7 +29,7 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
       <Group justify="space-between" mt="md" mb="xs">
         <Text fw={500}>{attraction.title}</Text>
         <Badge color="green" variant="light">
-          {attraction.attractionType.attractionType}
+          {attraction.attractionType}
         </Badge>
       </Group>
 
@@ -46,7 +47,7 @@ const AttractionCard: React.FC<AttractionCardProps> = ({ attraction }) => {
           pb={"10px"}
           w={"258px"}
         >
-          <Button variant="light" color="blue" radius="md">
+          <Button variant="light" color="blue" radius="md" onClick={() => {onLookUp()}}>
             Zobacz więcej
           </Button>
         </Group>

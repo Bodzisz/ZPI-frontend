@@ -14,6 +14,8 @@ import { Attraction } from "../../api/interfaces/Attraction";
 import { fetchAtrractionsByPage } from "../../api/apiFetchRequests";
 import CarouselCard from "./CarouselCard/CarouselCard";
 import { FetchError } from "../../api/interfaces/FetchError";
+import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
+
 
 const LandingPage = () => {
   const [query, setQuery] = useState("");
@@ -23,6 +25,7 @@ const LandingPage = () => {
   const [attractions, setAttractions] = useState<Attraction[]>([]);
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
+  const { setSelectedAttraction } = useSelectedAttractionContext();
 
   useEffect(() => {
     fetchAtrractionsByPage(0)
@@ -50,6 +53,8 @@ const LandingPage = () => {
         <CarouselCard
           image={`data:image/png;base64,${attraction.picture}`}
           title={attraction.title}
+          onClickFunc={setSelectedAttraction}
+          id={attraction.id}
         />
       </Carousel.Slide>
     ));

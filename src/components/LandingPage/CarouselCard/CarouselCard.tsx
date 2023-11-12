@@ -4,9 +4,11 @@ import classes from "./CarouselCard.module.css";
 interface CarouselCardProps {
   image: string;
   title: string;
+  onClickFunc: Function;
+  id: number;
 }
 
-const CarouselCard = ({ image, title }: CarouselCardProps) => {
+const CarouselCard = ({ image, title, onClickFunc, id }: CarouselCardProps) => {
   return (
     <a href="#" onClick={() => {}} style={{ textDecoration: "none" }}>
       <Paper
@@ -14,6 +16,7 @@ const CarouselCard = ({ image, title }: CarouselCardProps) => {
         radius="md"
         style={{ backgroundImage: `url(${image})` }}
         className={classes.card}
+        onClick={() => onClickFunc(id)}
       >
         <Paper
           p={10}
