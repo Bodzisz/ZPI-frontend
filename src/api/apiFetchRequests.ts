@@ -2,7 +2,13 @@ import { getApiUrl, getDefaultResponseHandler } from "./apiConfig";
 import { Attraction, AttractionList } from "./interfaces/Attraction";
 import { AttractionLocation } from "./interfaces/AttractionLocation";
 import { AttracionPicture } from "./interfaces/AttractionPicture";
+import {
+  AuthRequest,
+  RegisterRequest,
+  RegisterResponse,
+} from "./interfaces/Auth";
 import { District } from "./interfaces/District";
+import { User } from "./interfaces/User";
 
 const apiUrl = getApiUrl();
 
@@ -40,4 +46,22 @@ export const fetchAttractionPicture = async (
   return fetch(`${apiUrl}attractions/${id}/picture`, { method: "GET" }).then(
     getDefaultResponseHandler
   );
+};
+
+export const authenticate = async (authRequest: AuthRequest): Promise<User> => {
+  return fetch(`${apiUrl}auth/authenticate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(authRequest),
+  }).then(getDefaultResponseHandler);
+};
+
+export const register = async (
+  registerReq: RegisterRequest
+): Promise<RegisterResponse> => {
+  return fetch(`${apiUrl}users`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(registerReq),
+  }).then(getDefaultResponseHandler);
 };

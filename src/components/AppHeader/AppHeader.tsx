@@ -9,11 +9,15 @@ import {
   Title,
   Flex,
   Image,
+  Text,
+  Avatar,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./AppHeader.module.css";
 import ThemeSwitchButton from "../ThemeSwitchButton/ThemeSwitchButton";
 import logo from "../../img/logo.png";
+import { User } from "../../api/interfaces/User";
+import { logout } from "../../util/User";
 
 const contentPages = [
   {
@@ -37,9 +41,16 @@ const contentPages = [
 interface AppHeaderProps {
   selectedTab: number;
   setSelectedTab: Function;
+  user: User | null;
+  setUser: Function;
 }
 
-const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
+const AppHeader = ({
+  selectedTab,
+  setSelectedTab,
+  user,
+  setUser,
+}: AppHeaderProps) => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
@@ -67,12 +78,33 @@ const AppHeader = ({ selectedTab, setSelectedTab }: AppHeaderProps) => {
   };
 
   const getSideButtons = () => {
-    return (
-      <>
-        <Button variant="default">Logowanie</Button>
-        <Button>Rejestracja</Button>
-      </>
-    );
+    if (user === null) {
+      return (
+        <>
+          <Button variant="default" onClick={() => setSelectedTab(5)}>
+            Logowanie
+          </Button>
+          <Button onClick={() => setSelectedTab(6)}>Rejestracja</Button>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Avatar radius="xl" />
+          <Text pr="xl" fw={700}>
+            {user.username}
+          </Text>
+          <Button
+            onClick={() => {
+              logout();
+              setUser(null);
+            }}
+          >
+            Wyloguj
+          </Button>
+        </>
+      );
+    }
   };
 
   const getDefaultHeader = () => {

@@ -1,0 +1,12 @@
+.wrapper {
+  height: calc(100vh - 80px);
+  background-size: cover;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(../../img/rejestracja_rynek.jpeg);
+}
+
+.title {
+  font-family: Greycliff CF, var(--mantine-font-family);
+  font-weight: 900;
+  color: var(--mantine-color-white) !important;
+}
