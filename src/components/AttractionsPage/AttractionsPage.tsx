@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useWindowScroll } from "@mantine/hooks";
 import ServerError from "../ServerError/ServerError";
+import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
 const starterAttractionList: AttractionList = {
   content: [],
@@ -30,6 +31,9 @@ const AttractionsPage = () => {
   );
   const [activePage, setActivePage] = useState<number>(0);
   const [, scrollTo] = useWindowScroll();
+
+  const { setSelectedAttraction } = useSelectedAttractionContext();
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -64,6 +68,7 @@ const AttractionsPage = () => {
                 <AttractionCard
                   attraction={attraction}
                   key={attraction.id}
+                  onLookUp = {() => {setSelectedAttraction(attraction.id)}}
                 ></AttractionCard>
               );
             })}

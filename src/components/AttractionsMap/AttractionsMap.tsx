@@ -9,8 +9,13 @@ import { Button, Title, Center, Image, Container } from "@mantine/core";
 import { FetchError } from "../../api/interfaces/FetchError";
 import ServerError from "../ServerError/ServerError";
 import { LeafletMouseEvent } from "leaflet";
+import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
-const AttractionsMap = () => {
+interface SelectedAttractionContextProps {
+  attraction?: number;
+}
+
+const AttractionsMap = (props: SelectedAttractionContextProps) => {
   const [attractionsLocations, setAttractionsLocations] = useState<
     AttractionLocation[]
   >([]);
@@ -21,6 +26,8 @@ const AttractionsMap = () => {
     string | null
   >(null);
   const [errorStatus, setErrorStatus] = useState<number | null>(null);
+
+  const { setSelectedAttraction } = useSelectedAttractionContext();
 
   useEffect(() => {
     fetchAttractionsLocations()
@@ -34,7 +41,13 @@ const AttractionsMap = () => {
   }, []);
 
   useEffect(() => {
-    if (openedAttractionId !== null) {
+    if(props.attraction != undefined && attractionsLocations.length > 0){
+      findByID(props.attraction)
+    }
+  }, [props.attraction, attractionsLocations]);
+
+  useEffect(() => {
+    if (openedAttractionId !== null && openedAttractionId != undefined) {
       fetchAttractionPicture(openedAttractionId)
         .then((data) => {
           setOpenedAttractionPicture(data.picture);
@@ -51,8 +64,19 @@ const AttractionsMap = () => {
         loc.xcoordinate === event.latlng.lat &&
         loc.ycoordinate === event.latlng.lng
     )[0];
+    
     setOpenedAttractionId(location ? location.id : null);
   };
+
+  const findByID = (attraction: number) => {
+    const location: AttractionLocation = attractionsLocations.filter(
+      (loc) =>
+        loc.id === attraction
+    )[0];
+    setOpenedAttractionId(location ? location.id : null);
+  };
+
+  
 
   const getAttractionMarker = (location: AttractionLocation) => {
     return (
@@ -78,7 +102,7 @@ const AttractionsMap = () => {
           )}
 
           <Center pt={"10px"}>
-            <Button>Zobacz więcej</Button>
+            <Button onClick={() => {setSelectedAttraction(location.id)}}>Zobacz więcej</Button>
           </Center>
         </Popup>
       </Marker>
@@ -89,10 +113,13 @@ const AttractionsMap = () => {
     if (errorStatus === null) {
       return (
         <MapContainer
-          center={[51.167506, 16.595754]}
+          center={[51.167506, 16.595754] }
           zoom={9}
           scrollWheelZoom={false}
-          style={{
+          style={props.attraction?{
+            height: 340,
+           
+          }: {
             height: "calc(100vh - 155px)",
           }}
         >

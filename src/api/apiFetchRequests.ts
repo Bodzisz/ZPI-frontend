@@ -32,6 +32,15 @@ export const fetchDistricts = async (): Promise<District[]> => {
   );
 };
 
+export const fetchDistanceFromUser = async (
+  id: number,
+  xCoordinate: number,
+  yCoordinate: number
+): Promise<number> => {
+  const url = `${apiUrl}attractions/${id}/distance?xCoordinate=${xCoordinate}&yCoordinate=${yCoordinate}`;
+  return fetch(url, { method: "GET" }).then(getDefaultResponseHandler);
+};
+
 export const fetchAttractionsLocations = async (): Promise<
   AttractionLocation[]
 > => {

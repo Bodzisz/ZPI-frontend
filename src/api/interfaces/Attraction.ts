@@ -1,16 +1,13 @@
-import { AttractionType } from "./AttractionType";
-import { City } from "./City";
-import { District } from "./District";
-
 export interface Attraction {
   id: number;
   title: string;
   type: string;
   description: string;
   picture: string;
-  attractionType: AttractionType;
-  district: District;
-  city: City;
+  attractionType: string;
+  district: string;
+  city: string;
+  postalCode: string;
   xcoordinate: number;
   ycoordinate: number;
 }
