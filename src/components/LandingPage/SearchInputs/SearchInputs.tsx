@@ -13,6 +13,7 @@ interface SearchInputProps {
   onChange: ChangeEventHandler<HTMLInputElement>;
   searchType: string;
   setSearchType: (value: string) => void;
+  handleSearch: () => void;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
@@ -20,13 +21,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onChange,
   searchType,
   setSearchType,
+  handleSearch
 }) => {
   const theme = useMantineTheme();
   const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
-  const handleSearch = () => {
-    //search logic
-  };
   return (
     <Group justify="center">
       <SegmentedControl

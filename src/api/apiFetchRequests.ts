@@ -73,4 +73,21 @@ export const register = async (
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(registerReq),
   }).then(getDefaultResponseHandler);
+}
+//http://localhost:8080/api/v1/attractions/list?types=Przyroda,Zabytki&districts=milicki&cities=Łąki
+
+export const fetchAttractionsByName = async (
+  query: string
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/list?titles=${query}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
+export const fetchAttractionsByCity = async (
+  query: string
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/list?cities=${query}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
 };
