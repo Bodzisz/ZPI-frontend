@@ -16,6 +16,10 @@ import { FooterCentered } from "./components/Footer/Footer";
 import AttractionsPage from "./components/AttractionsPage/AttractionsPage";
 import "@mantine/carousel/styles.css";
 import AttractionsMap from "./components/AttractionsMap/AttractionsMap";
+import LoginPage from "./components/LoginPage/LoginPage";
+import SignUpPage from "./components/SignUpPage/SignUpPage";
+import { User } from "./api/interfaces/User";
+import { getUser } from "./util/User";
 
 const theme = createTheme({
   primaryColor: "cyan",
@@ -33,6 +37,7 @@ const CenterTitle = createPolymorphicComponent<"title", TitleProps>(
 
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(1);
+  const [user, setUser] = useState<User | null>(getUser());
 
   useEffect(() => {
     logApiHealth();
@@ -49,6 +54,12 @@ export default function App() {
         return <AttractionsMap />;
       case 4:
         return <CenterTitle>Kontakt</CenterTitle>;
+      case 5:
+        return (
+          <LoginPage setSelectedTab={setSelectedTab} setStateUser={setUser} />
+        );
+      case 6:
+        return <SignUpPage setSelectedTab={setSelectedTab} />;
       default:
         return <></>;
     }
@@ -78,13 +89,17 @@ export default function App() {
           offset: false,
         }}
       >
-        <AppHeader selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+        <AppHeader
+          selectedTab={selectedTab}
+          setSelectedTab={setSelectedTab}
+          user={user}
+          setUser={setUser}
+        />
         <AppShell.Main
           style={{
             width: "100%",
             minHeight: "calc(100vh - 155px)",
           }}
-          pos={"relative"}
         >
           {getContent()}
         </AppShell.Main>
