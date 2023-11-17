@@ -11,7 +11,7 @@ import classes from "./LandingPage.module.css";
 import { Carousel } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
 import { Attraction } from "../../api/interfaces/Attraction";
-import { fetchAtrractionsByPage } from "../../api/apiFetchRequests";
+import { fetchAtrractionsByPage, fetchAttractionsByCity, fetchAttractionsByName } from "../../api/apiFetchRequests";
 import CarouselCard from "./CarouselCard/CarouselCard";
 import { FetchError } from "../../api/interfaces/FetchError";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
@@ -19,7 +19,7 @@ import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
 const LandingPage = () => {
   const [query, setQuery] = useState("");
-  const [searchType, setSerachType] = useState("atrakcje");
+  const [searchType, setSearchType] = useState("atrakcje");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [attractions, setAttractions] = useState<Attraction[]>([]);
@@ -43,9 +43,41 @@ const LandingPage = () => {
       });
   }, []);
 
-  const handleSearch = (value: string) => {
-    setQuery(value);
+  const handleSearch = () => {
+    if(searchType === "miasta"){
+      fetchAttractionsByCity(query)
+      .then((data) => {
+        console.log(data.content.slice(0, 9))
+        console.log(query);
+        setAttractions(data.content.slice(0, 9));
+      })
+      .catch((error: FetchError) => {
+        console.log(
+          `Error during fetching carousel attractions (status: ${error.status})`
+        );
+        setIsError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+    }else{
+        fetchAttractionsByName(query)
+        .then((data) => {
+          console.log(data.content.slice(0, 9))
+        console.log(query);
+          setAttractions(data.content.slice(0, 9));
+        })
+        .catch((error: FetchError) => {
+          console.log(
+            `Error during fetching carousel attractions (status: ${error.status})`
+          );
+          setIsError(true);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
   };
+}
 
   const getCarouselSlides = () => {
     return attractions.map((attraction) => (
@@ -118,10 +150,11 @@ const LandingPage = () => {
           <SearchInput
             value={query}
             onChange={(e: React.ChangeEvent<HTMLInputElement>): void =>
-              handleSearch(e.target.value)
+              {setQuery(e.target.value)}
             }
             searchType={searchType}
-            setSearchType={setSerachType}
+            setSearchType={setSearchType}
+            handleSearch={handleSearch}
           />
         </Center>
       </div>
@@ -131,5 +164,7 @@ const LandingPage = () => {
     </div>
   );
 };
+
+
 
 export default LandingPage;
