@@ -85,6 +85,16 @@ export const fetchAttractionsByName = async (
   }).then(getDefaultResponseHandler);
 };
 
+export const fetchAttractionsByType = async (
+  types: string[],
+  page: number
+): Promise<AttractionList> => {
+  const typesString = types.join(',');
+  return fetch(`${apiUrl}attractions/list?types=${typesString}&page=${page}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
 export const fetchAttractionsByCity = async (
   query: string
 ): Promise<AttractionList> => {
@@ -106,3 +116,13 @@ export const addAttraction = async (
     body: JSON.stringify(newAttraction),
   }).then(getDefaultResponseHandler);
 };
+
+export const fetchAttractionsType = async (
+  query: string,
+  
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/list?cities=${query}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
