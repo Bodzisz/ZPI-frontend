@@ -18,6 +18,7 @@ import ThemeSwitchButton from "../ThemeSwitchButton/ThemeSwitchButton";
 import logo from "../../img/logo.png";
 import { User } from "../../api/interfaces/User";
 import { logout } from "../../util/User";
+import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
 const contentPages = [
   {
@@ -53,6 +54,7 @@ const AppHeader = ({
 }: AppHeaderProps) => {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+  const { setSelectedAttraction } = useSelectedAttractionContext();
 
   const getHeaderTabs = () => {
     return (
@@ -66,7 +68,10 @@ const AppHeader = ({
                   ? `${classes.link} ${classes.selectedLink}`
                   : classes.link
               }
-              onClick={() => setSelectedTab(page.id)}
+              onClick={() => {
+                setSelectedTab(page.id);
+                setSelectedAttraction(null);
+              }}
               key={page.id}
             >
               {page.title}

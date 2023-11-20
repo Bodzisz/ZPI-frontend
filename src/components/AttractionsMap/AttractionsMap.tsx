@@ -26,6 +26,7 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
     string | null
   >(null);
   const [errorStatus, setErrorStatus] = useState<number | null>(null);
+  const centerCords = [51.167506, 16.595754];
 
   const { setSelectedAttraction } = useSelectedAttractionContext();
 
@@ -33,7 +34,13 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
     fetchAttractionsLocations()
       .then((data) => {
         setErrorStatus(null);
-        setAttractionsLocations(data);
+        if (props.attraction) {
+          setAttractionsLocations(
+            data.filter((attr) => attr.id === props.attraction)
+          );
+        } else {
+          setAttractionsLocations(data);
+        }
       })
       .catch((error: FetchError) => {
         setErrorStatus(error.status);
@@ -41,8 +48,8 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
   }, []);
 
   useEffect(() => {
-    if(props.attraction != undefined && attractionsLocations.length > 0){
-      findByID(props.attraction)
+    if (props.attraction != undefined && attractionsLocations.length > 0) {
+      findByID(props.attraction);
     }
   }, [props.attraction, attractionsLocations]);
 
@@ -64,19 +71,16 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
         loc.xcoordinate === event.latlng.lat &&
         loc.ycoordinate === event.latlng.lng
     )[0];
-    
+
     setOpenedAttractionId(location ? location.id : null);
   };
 
   const findByID = (attraction: number) => {
     const location: AttractionLocation = attractionsLocations.filter(
-      (loc) =>
-        loc.id === attraction
+      (loc) => loc.id === attraction
     )[0];
     setOpenedAttractionId(location ? location.id : null);
   };
-
-  
 
   const getAttractionMarker = (location: AttractionLocation) => {
     return (
@@ -102,7 +106,13 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
           )}
 
           <Center pt={"10px"}>
-            <Button onClick={() => {setSelectedAttraction(location.id)}}>Zobacz więcej</Button>
+            <Button
+              onClick={() => {
+                setSelectedAttraction(location.id);
+              }}
+            >
+              Zobacz więcej
+            </Button>
           </Center>
         </Popup>
       </Marker>
@@ -113,15 +123,18 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
     if (errorStatus === null) {
       return (
         <MapContainer
-          center={[51.167506, 16.595754] }
+          center={[centerCords[0], centerCords[1]]}
           zoom={9}
           scrollWheelZoom={false}
-          style={props.attraction?{
-            height: 340,
-           
-          }: {
-            height: "calc(100vh - 155px)",
-          }}
+          style={
+            props.attraction
+              ? {
+                  height: 340,
+                }
+              : {
+                  height: "calc(100vh - 155px)",
+                }
+          }
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
