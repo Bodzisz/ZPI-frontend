@@ -11,7 +11,6 @@ import {
   useMantineTheme,
   rem,
   Text,
-  Image,
 } from "@mantine/core";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
@@ -20,7 +19,6 @@ import { IconCloudUpload, IconX, IconDownload } from "@tabler/icons-react";
 import { FileWithPath } from "react-dropzone-esm";
 import { addAttraction } from "../../api/apiFetchRequests";
 import { User } from "../../api/interfaces/User";
-import { FetchError } from "../../api/interfaces/FetchError";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
 interface MarkerCords {
@@ -115,7 +113,7 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
         <Stepper
           active={active}
           onStepClick={setActive}
-          //   allowNextStepsSelect={false}
+          allowNextStepsSelect={false}
         >
           <Stepper.Step label="Dane ogólne" description="Podaj dane ogólne">
             <form onSubmit={form.onSubmit(() => setActive(1))}>
