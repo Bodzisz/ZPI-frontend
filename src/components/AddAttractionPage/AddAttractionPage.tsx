@@ -114,8 +114,8 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
   }, [position]);
 
   return (
-    <Container size={"sm"} pt={30}>
-      <Paper withBorder shadow="md" p={30} mt={15} radius="md">
+    <Container size={"sm"} pt={30} pb={100}>
+      <Paper withBorder shadow="md" p={30} mt={15} pb={30} radius="md">
         <Stepper
           active={active}
           onStepClick={setActive}
