@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AttractionCard } from "../AttractionCard/AttractionCard";
-import { fetchAtrractionsByPage } from "../../api/apiFetchRequests";
+import { fetchAtrractionsByPage, fetchAttractionsByType } from "../../api/apiFetchRequests";
 import { FetchError } from "../../api/interfaces/FetchError";
 import { AttractionList } from "../../api/interfaces/Attraction";
 import {
@@ -9,6 +9,7 @@ import {
   Center,
   Container,
   Pagination,
+  Select
 } from "@mantine/core";
 import { useWindowScroll } from "@mantine/hooks";
 import ServerError from "../ServerError/ServerError";
@@ -23,6 +24,8 @@ const starterAttractionList: AttractionList = {
   numberOfElements: 0,
 };
 
+const attractionTypesMock = ["Przyroda", "Zabytki", "Aktywność", "Muzea"]
+
 const AttractionsPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorStatus, setErorrStatus] = useState<number | null>(null);
@@ -30,12 +33,48 @@ const AttractionsPage = () => {
     starterAttractionList
   );
   const [activePage, setActivePage] = useState<number>(0);
+  const [attractionTypes, setAttractionTypes] = useState<string[]>([]); 
+  const [selectedAttractionType, setSelectedAttractionType] = useState<string | null>(null); // State to store the selected attraction type
   const [, scrollTo] = useWindowScroll();
 
   const { setSelectedAttraction } = useSelectedAttractionContext();
 
+  useEffect(() => {
+    // fetch attraction types
+    setAttractionTypes(attractionTypesMock)
+  }, []);
 
   useEffect(() => {
+    if(selectedAttractionType){
+      setIsLoading(true);
+      fetchAttractionsByType([selectedAttractionType], activePage)
+        .then((data: any) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [selectedAttractionType]);
+
+
+  useEffect(() => {
+    if(selectedAttractionType){
+      setIsLoading(true);
+      fetchAttractionsByType([selectedAttractionType], activePage)
+        .then((data: any) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }else{
     setIsLoading(true);
     fetchAtrractionsByPage(activePage)
       .then((data) => {
@@ -47,11 +86,16 @@ const AttractionsPage = () => {
       .finally(() => {
         setIsLoading(false);
       });
+    }
   }, [activePage]);
 
   const handlePageChange = (page: number) => {
     setActivePage(page - 1);
     scrollTo({ y: 0 });
+  };
+
+  const handleAttractionTypeChange = (value: string | null) => {
+    setSelectedAttractionType(value);
   };
 
   const getAttractionsList = () => {
@@ -107,7 +151,18 @@ const AttractionsPage = () => {
   };
 
   return (
-    <div style={{ height: "100vh", paddingTop: "30px" }}>{getContent()}</div>
+    <div style={{ height: "100vh", paddingTop: "30px" }}>
+       <div style={{ paddingBottom: "50px" }}>
+      <Container>
+        <Select
+          data={attractionTypes}
+          placeholder="Wybierz typ atrakcji"
+          value={selectedAttractionType}
+          onChange={(value: string | null) => handleAttractionTypeChange(value)}
+        />
+      </Container>
+      </div>
+      {getContent()}</div>
   );
 };
 
