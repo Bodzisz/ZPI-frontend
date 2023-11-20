@@ -23,7 +23,6 @@ import { getUser } from "./util/User";
 import AttractionView from "./components/AttractionSingleView/AttractionView";
 import { SelectedAttractionContext } from "./SelectedAttractionContext";
 
-
 const theme = createTheme({
   primaryColor: "cyan",
 });
@@ -38,28 +37,60 @@ const CenterTitle = createPolymorphicComponent<"title", TitleProps>(
   _CenterTitle
 );
 
-
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(1);
   const [user, setUser] = useState<User | null>(getUser());
-  const [selectedAttraction, setSelectedAttraction] = useState<number | null>(null);
-
+  const [selectedAttraction, setSelectedAttraction] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     logApiHealth();
   }, []);
 
+  useEffect(() => {
+    console.log(selectedTab);
+  }, [selectedTab]);
+
   const getContent = () => {
     if (selectedAttraction) {
-      return <SelectedAttractionContext.Provider value={{ selectedAttraction, setSelectedAttraction }}> <AttractionView attraction={selectedAttraction}></AttractionView></SelectedAttractionContext.Provider>;
+      return (
+        <SelectedAttractionContext.Provider
+          value={{ selectedAttraction, setSelectedAttraction }}
+        >
+          {" "}
+          <AttractionView attraction={selectedAttraction}></AttractionView>
+        </SelectedAttractionContext.Provider>
+      );
     }
     switch (selectedTab) {
       case 1:
-        return <SelectedAttractionContext.Provider value={{ selectedAttraction, setSelectedAttraction }}> <LandingPage /></SelectedAttractionContext.Provider>;
+        return (
+          <SelectedAttractionContext.Provider
+            value={{ selectedAttraction, setSelectedAttraction }}
+          >
+            {" "}
+            <LandingPage />
+          </SelectedAttractionContext.Provider>
+        );
       case 2:
-        return <SelectedAttractionContext.Provider value={{ selectedAttraction, setSelectedAttraction }}> <AttractionsPage /></SelectedAttractionContext.Provider>;
+        return (
+          <SelectedAttractionContext.Provider
+            value={{ selectedAttraction, setSelectedAttraction }}
+          >
+            {" "}
+            <AttractionsPage />
+          </SelectedAttractionContext.Provider>
+        );
       case 3:
-        return <SelectedAttractionContext.Provider value={{ selectedAttraction, setSelectedAttraction }}> <AttractionsMap /></SelectedAttractionContext.Provider>;
+        return (
+          <SelectedAttractionContext.Provider
+            value={{ selectedAttraction, setSelectedAttraction }}
+          >
+            {" "}
+            <AttractionsMap />
+          </SelectedAttractionContext.Provider>
+        );
       case 4:
         return <CenterTitle>Kontakt</CenterTitle>;
       case 5:
@@ -97,25 +128,28 @@ export default function App() {
           offset: false,
         }}
       >
-        <AppHeader
-          selectedTab={selectedTab}
-          setSelectedTab={setSelectedTab}
-          user={user}
-          setUser={setUser}
-        />
+        <SelectedAttractionContext.Provider
+          value={{ selectedAttraction, setSelectedAttraction }}
+        >
+          <AppHeader
+            selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
+            user={user}
+            setUser={setUser}
+          />
+        </SelectedAttractionContext.Provider>
         <AppShell.Main
           style={{
             width: "100%",
             minHeight: "calc(100vh - 155px)",
           }}
         >
-
           {getContent()}
-      </AppShell.Main>
-      <AppShell.Footer>
-        <FooterCentered />
-      </AppShell.Footer>
-    </AppShell>
-    </MantineProvider >
+        </AppShell.Main>
+        <AppShell.Footer>
+          <FooterCentered />
+        </AppShell.Footer>
+      </AppShell>
+    </MantineProvider>
   );
 }
