@@ -130,6 +130,7 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
             props.attraction
               ? {
                   height: 340,
+                  width: 500,
                 }
               : {
                   height: "calc(100vh - 155px)",

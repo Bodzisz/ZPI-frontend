@@ -20,25 +20,6 @@ import { User } from "../../api/interfaces/User";
 import { logout } from "../../util/User";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
-const contentPages = [
-  {
-    id: 1,
-    title: "Strona główna",
-  },
-  {
-    id: 2,
-    title: "Atrakcje",
-  },
-  {
-    id: 3,
-    title: "Mapa",
-  },
-  {
-    id: 4,
-    title: "Kontakt",
-  },
-];
-
 interface AppHeaderProps {
   selectedTab: number;
   setSelectedTab: Function;
@@ -55,29 +36,58 @@ const AppHeader = ({
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { setSelectedAttraction } = useSelectedAttractionContext();
+  const contentPages = [
+    {
+      id: 1,
+      title: "Strona główna",
+      visible: true,
+    },
+    {
+      id: 2,
+      title: "Atrakcje",
+      visible: true,
+    },
+    {
+      id: 3,
+      title: "Dodaj atrakcje",
+      visible: user !== null,
+    },
+    {
+      id: 4,
+      title: "Mapa",
+      visible: true,
+    },
+    {
+      id: 5,
+      title: "Kontakt",
+      visible: true,
+    },
+  ];
 
   const getHeaderTabs = () => {
     return (
       <>
-        {contentPages.map((page) => {
-          return (
-            <a
-              href="#"
-              className={
-                page.id === selectedTab
-                  ? `${classes.link} ${classes.selectedLink}`
-                  : classes.link
-              }
-              onClick={() => {
-                setSelectedTab(page.id);
-                setSelectedAttraction(null);
-              }}
-              key={page.id}
-            >
-              {page.title}
-            </a>
-          );
-        })}
+        {contentPages
+          .filter((page) => page.visible)
+          .map((page) => {
+            return (
+              <a
+                href="#"
+                className={
+                  page.id === selectedTab
+                    ? `${classes.link} ${classes.selectedLink}`
+                    : classes.link
+                }
+                onClick={() => {
+                  setSelectedTab(page.id);
+                  setSelectedAttraction(null);
+                }}
+                key={page.id}
+              >
+                {page.title}
+              </a>
+            );
+          })}
       </>
     );
   };
@@ -86,10 +96,10 @@ const AppHeader = ({
     if (user === null) {
       return (
         <>
-          <Button variant="default" onClick={() => setSelectedTab(5)}>
+          <Button variant="default" onClick={() => setSelectedTab(6)}>
             Logowanie
           </Button>
-          <Button onClick={() => setSelectedTab(6)}>Rejestracja</Button>
+          <Button onClick={() => setSelectedTab(7)}>Rejestracja</Button>
         </>
       );
     } else {
@@ -103,6 +113,7 @@ const AppHeader = ({
             onClick={() => {
               logout();
               setUser(null);
+              setSelectedTab(1);
             }}
           >
             Wyloguj

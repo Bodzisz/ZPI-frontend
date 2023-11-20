@@ -8,6 +8,7 @@ import {
   RegisterResponse,
 } from "./interfaces/Auth";
 import { District } from "./interfaces/District";
+import { NewAttraction } from "./interfaces/NewAttraction";
 import { User } from "./interfaces/User";
 
 const apiUrl = getApiUrl();
@@ -73,21 +74,35 @@ export const register = async (
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(registerReq),
   }).then(getDefaultResponseHandler);
-}
+};
 //http://localhost:8080/api/v1/attractions/list?types=Przyroda,Zabytki&districts=milicki&cities=Łąki
 
 export const fetchAttractionsByName = async (
   query: string
 ): Promise<AttractionList> => {
-  return fetch(`${apiUrl}attractions/list?titles=${query}`, { method: "GET" }).then(
-    getDefaultResponseHandler
-  );
+  return fetch(`${apiUrl}attractions/list?titles=${query}`, {
+    method: "GET",
+  }).then(getDefaultResponseHandler);
 };
 
 export const fetchAttractionsByCity = async (
   query: string
 ): Promise<AttractionList> => {
-  return fetch(`${apiUrl}attractions/list?cities=${query}`, { method: "GET" }).then(
-    getDefaultResponseHandler
-  );
+  return fetch(`${apiUrl}attractions/list?cities=${query}`, {
+    method: "GET",
+  }).then(getDefaultResponseHandler);
+};
+
+export const addAttraction = async (
+  newAttraction: NewAttraction,
+  user: User
+): Promise<Attraction> => {
+  return fetch(`${apiUrl}attractions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user.token}`,
+    },
+    body: JSON.stringify(newAttraction),
+  }).then(getDefaultResponseHandler);
 };

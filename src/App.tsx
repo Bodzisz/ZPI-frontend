@@ -12,6 +12,7 @@ import { checkResponseStatus, getApiUrl } from "./api/apiConfig";
 import AppHeader from "./components/AppHeader/AppHeader";
 import LandingPage from "./components/LandingPage/LandingPage";
 import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
 import { FooterCentered } from "./components/Footer/Footer";
 import AttractionsPage from "./components/AttractionsPage/AttractionsPage";
 import "@mantine/carousel/styles.css";
@@ -22,6 +23,7 @@ import { User } from "./api/interfaces/User";
 import { getUser } from "./util/User";
 import AttractionView from "./components/AttractionSingleView/AttractionView";
 import { SelectedAttractionContext } from "./SelectedAttractionContext";
+import AddAttractionPage from "./components/AddAttractionPage/AddAttractionPage";
 
 const theme = createTheme({
   primaryColor: "cyan",
@@ -88,16 +90,25 @@ export default function App() {
             value={{ selectedAttraction, setSelectedAttraction }}
           >
             {" "}
-            <AttractionsMap />
+            <AddAttractionPage user={user} />
           </SelectedAttractionContext.Provider>
         );
       case 4:
-        return <CenterTitle>Kontakt</CenterTitle>;
+        return (
+          <SelectedAttractionContext.Provider
+            value={{ selectedAttraction, setSelectedAttraction }}
+          >
+            {" "}
+            <AttractionsMap />
+          </SelectedAttractionContext.Provider>
+        );
       case 5:
+        return <CenterTitle>Kontakt</CenterTitle>;
+      case 6:
         return (
           <LoginPage setSelectedTab={setSelectedTab} setStateUser={setUser} />
         );
-      case 6:
+      case 7:
         return <SignUpPage setSelectedTab={setSelectedTab} />;
       default:
         return <></>;
