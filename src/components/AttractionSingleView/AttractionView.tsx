@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Text, Image, Card, Group, Badge, Button, Loader, Center, Container } from "@mantine/core";
+import { Text, Image, Card, Group, Badge, Button, Loader, Center, Container, Input, Paper } from "@mantine/core";
 import { Attraction } from "../../api/interfaces/Attraction";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
-import { fetchAtrractionById, fetchDistanceFromUser } from "../../api/apiFetchRequests";
+import { addAttractionComment,addAttractionRating, deleteComment, fetchAtrractionById, fetchAttractionsCommentsByID, fetchAttractionsRatingsByID, fetchDistanceFromUser } from "../../api/apiFetchRequests";
 import { FetchError } from "../../api/interfaces/FetchError";
+import { MyComment, Rating, NewMyComment, NewRating } from "../../api/interfaces/Comment";
 import ServerError from "../ServerError/ServerError";
 import AttractionsMap from "../AttractionsMap/AttractionsMap";
+import { User } from "../../api/interfaces/User";
+
 
 interface AttractionDetailsProps {
     attraction: number;
+    user: User | null;
   }
-  const AttractionDetails: React.FC<AttractionDetailsProps> = ({ attraction }) => {
+  const AttractionDetails: React.FC<AttractionDetailsProps> = ({ attraction, user }) => {
     const [fullAttraction, setFullAttraction] = useState<Attraction | null>(null)
     const { setSelectedAttraction } = useSelectedAttractionContext();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -18,6 +22,9 @@ interface AttractionDetailsProps {
     const [userPosition, setUserPosition] = useState<[number, number] | null>(null);
     const [distanceFromUser, setDistanceFromUser] = useState<number | null>(null);
     const [showButton, setShowButton] = useState(true);
+
+    const [comments, setComments] = useState<any>([]);
+    const [ratings, setRatings] = useState<any>([]);
 
     const handleClick = () => {
       if ("geolocation" in navigator) {
@@ -39,7 +46,18 @@ interface AttractionDetailsProps {
           .finally(() => {
             setIsLoading(false);
           });
-          
+  
+          fetchAttractionsCommentsByID(attraction).then((data) => {
+            setComments(data);
+          }).catch((error: FetchError) => {
+            setErorrStatus(error.status);})
+
+          fetchAttractionsRatingsByID(attraction).then((data) => {
+            setRatings(data);
+          })
+          .catch((error: FetchError) => {
+        setErorrStatus(error.status);
+      })
         }
 , [])
 
@@ -51,7 +69,163 @@ interface AttractionDetailsProps {
       }
       }
     , [userPosition])
+    
+  
+    
+    
+    const CommentForm = () => {
+      const [rating, setRating] = useState(1);
+      const [description, setDescription] = useState('');
+    
+      const handleAddComment = () => {
+        if(user != null){
+        const newComment: NewMyComment = {
+          comment: description,
+          attractionId: attraction,
+          login: user?.username
+        };
 
+          addAttractionComment(newComment, user).then(() => fetchAttractionsCommentsByID(attraction).then((data) => {
+            setComments(data);
+          }).catch((error: FetchError) => {
+            setErorrStatus(error.status);
+          }))
+        }
+
+        
+    
+        setDescription('');
+        
+      };
+
+      
+
+      const handleAddRating = () => {
+        if(user != null){
+        
+        const newRating: NewRating = {
+          login: user?.username,
+          attractionId: attraction,
+          rating: rating
+        };
+          addAttractionRating(newRating, user).then(() => fetchAttractionsRatingsByID(attraction).then((data) => {
+            setRatings(data);
+          }).catch((error: FetchError) => {
+            setErorrStatus(error.status);
+          }))
+        }
+    
+        setRating(1);
+      };
+    
+      return (
+        <div>
+          <div  style={{paddingBottom: 10}} >
+          <Input
+            value={description}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => setDescription(event.target.value)}
+            placeholder="Wpisz komentarz..."
+          />
+          </div>
+  
+          <Button onClick={handleAddComment} >Dodaj komentarz</Button>
+          <div style={{paddingBottom: 10, paddingTop: 10}}>
+            <span >Ocena:      </span>
+            <select value={rating} onChange={(event) => setRating(parseInt(event.target.value))}>
+              {[1, 2, 3, 4, 5].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <Button onClick={handleAddRating}>Dodaj Ocene</Button>
+        </div>
+      );
+    };
+
+
+    const handleDelete = (id: number) => {
+      if(user != null){
+
+      deleteComment(id, user)
+      setComments((prevComments: any) => prevComments.filter((comment: { id: number; }) => comment.id !== id));
+
+      }
+      
+    };
+    
+    const CommentComponent: React.FC<{ description: string; username: string; id: number;  }> = ({ description, username, id }) => {
+      return (
+        <Container size="sm">
+          <Paper
+            shadow="sm"
+            radius="md"
+            style={{
+              marginBottom: '15px',
+              backgroundColor: '#333',
+              color: '#fff',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '15px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <p style={{ margin: 0, fontSize: '16px', fontWeight: 'bold' }}>{username}</p>
+              {user?.username == username && (
+                <button style={{
+                  backgroundColor: "#ff5555",padding: "5px 10px",border: "none", cursor: "pointer"
+                }} onClick={() => handleDelete(id)}>
+                
+              </button>
+              )}
+            </div>
+            <p style={{ margin: 0, color: '#ccc', fontSize: '14px', marginTop: '10px' }}>{description}</p>
+          </Paper>
+        </Container>
+      );
+    };
+    
+    const RatingComponent: React.FC<{ rating: number; username: string }> = ({ rating, username }) => {
+      return (
+        <Container size="sm">
+          <Paper
+            shadow="sm"
+            radius="md"
+            style={{ marginBottom: '15px', backgroundColor: '#333', color: '#fff', display: 'flex', flexDirection: 'column', padding: '15px' }}
+          >
+            <p style={{ margin: 0, fontSize: '16px', fontWeight: 'bold' }}>{username}</p>
+            <Badge color="blue" style={{ marginBottom: '10px' }}>{`Ocena: ${rating}/5`}</Badge>
+          </Paper>
+        </Container>
+      );
+    };
+    
+    console.log(comments)
+    
+    const CommentList: React.FC<{ comments: MyComment[],  }> = ({ comments }) => {
+      return (
+        <div>
+          {comments?.map((comment) => (
+            <CommentComponent description={comment.comment} username={comment.username} id={comment.id} />
+          ))}
+         
+        </div>
+      );
+    };
+
+    const RatingsList: React.FC<{  ratings: Rating[] }> = ({ ratings }) => {
+      return (
+        <div>
+         
+          {ratings?.map((rating) => (
+            <RatingComponent rating={rating.rating}  username={rating.username}/>
+          ))}
+        </div>
+      );
+    };
+    
 
     const additionalInfo = () => {
         if (errorStatus !== null) {
@@ -71,7 +245,7 @@ interface AttractionDetailsProps {
             </>
           );
         } else {
-          return<> <div >
+          return<> <div>
           <Text size="sm" c="dimmed" style={{ marginBottom: 10, marginTop: 10 }}>
             <strong>Powiat:</strong> {fullAttraction?.district}
           </Text>
@@ -84,10 +258,11 @@ interface AttractionDetailsProps {
             {fullAttraction? <div style={{marginTop: 10}}><AttractionsMap attraction={attraction}></AttractionsMap></div> : ""}
             
         </div>
-        <div style={{width: 600}}>
-        <Text size="md" c="dimmed" lineClamp={10}>
-        Komentarze
-    </Text>
+        <div style={{width: 600, paddingLeft: 10, paddingTop: 10}}>
+        <CommentList comments={comments}></CommentList>
+        <RatingsList  ratings={ratings}></RatingsList>
+        
+        {user != null ? <CommentForm></CommentForm> : ""}
     </div>
     </>
         }
@@ -136,7 +311,7 @@ interface AttractionDetailsProps {
         </Text>
       )}
     </div>
-  
+        
             <Group
               bottom={10}
               pos={"absolute"}
@@ -157,9 +332,7 @@ interface AttractionDetailsProps {
             </Group>
           </Card>
         </div>
-
        {additionalInfo()}
-    
             
         
       </div>
