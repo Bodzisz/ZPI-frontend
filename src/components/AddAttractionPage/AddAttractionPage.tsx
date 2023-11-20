@@ -58,6 +58,12 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
       title: "",
       description: "",
     },
+    validate: {
+      postalCode: (value) =>
+        /\d{2}-\d{3}/.test(value)
+          ? null
+          : "Kod pocztowy musi być w formacie XX-XXX",
+    },
   });
   const markerRef = useRef(null);
   const openRef = useRef<() => void>(null);
