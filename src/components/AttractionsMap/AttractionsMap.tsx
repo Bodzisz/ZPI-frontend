@@ -5,7 +5,15 @@ import {
   fetchAttractionsLocations,
 } from "../../api/apiFetchRequests";
 import { AttractionLocation } from "../../api/interfaces/AttractionLocation";
-import { Button, Title, Center, Image, Container } from "@mantine/core";
+import {
+  Button,
+  Title,
+  Center,
+  Image,
+  Container,
+  Modal,
+  Loader,
+} from "@mantine/core";
 import { FetchError } from "../../api/interfaces/FetchError";
 import ServerError from "../ServerError/ServerError";
 import { LeafletMouseEvent } from "leaflet";
@@ -26,11 +34,13 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
     string | null
   >(null);
   const [errorStatus, setErrorStatus] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const centerCords = [51.167506, 16.595754];
 
   const { setSelectedAttraction } = useSelectedAttractionContext();
 
   useEffect(() => {
+    setIsLoading(true);
     fetchAttractionsLocations()
       .then((data) => {
         setErrorStatus(null);
@@ -44,6 +54,9 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
       })
       .catch((error: FetchError) => {
         setErrorStatus(error.status);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -155,7 +168,24 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
     }
   };
 
-  return getContent();
+  return (
+    <>
+      {isLoading ? <></> : getContent()}
+      <Modal
+        opened={isLoading}
+        withCloseButton={false}
+        closeOnClickOutside={true}
+        closeOnEscape={true}
+        onClose={() => setIsLoading(false)}
+        title="Ładowanie atrakcji"
+        centered
+      >
+        <Center>
+          <Loader />
+        </Center>
+      </Modal>
+    </>
+  );
 };
 
 export default AttractionsMap;
