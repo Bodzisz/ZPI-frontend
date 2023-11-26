@@ -11,6 +11,7 @@ import {
   useMantineTheme,
   rem,
   Text,
+  Select,
 } from "@mantine/core";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
@@ -20,6 +21,9 @@ import { FileWithPath } from "react-dropzone-esm";
 import { addAttraction } from "../../api/apiFetchRequests";
 import { User } from "../../api/interfaces/User";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
+import { AttractionType } from "../../api/interfaces/AttractionType";
+import { fetchAttractionsTypes } from "../../api/apiFetchRequests";
+import { districts } from "../../util/Districts";
 
 interface MarkerCords {
   _latlng: {
@@ -47,6 +51,7 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
   const [position, setPosition] = useState([51.167506, 16.595754]);
   const [picture, setPicture] = useState<FileWithPath | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [attractionTypes, setAttractionsTypes] = useState<AttractionType[]>([]);
   const { setSelectedAttraction } = useSelectedAttractionContext();
   const theme = useMantineTheme();
   const form = useForm({
@@ -79,6 +84,16 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
     }),
     []
   );
+
+  useEffect(() => {
+    fetchAttractionsTypes()
+      .then((data) => {
+        setAttractionsTypes(data);
+      })
+      .catch(() => {
+        setAttractionsTypes([{ id: -1, attractionType: "Inne" }]);
+      });
+  }, []);
 
   const handleAttractionAdding = () => {
     picture?.arrayBuffer().then((ab) => {
@@ -129,9 +144,10 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
                 required
                 {...form.getInputProps("title")}
               />
-              <TextInput
+              <Select
                 label="Powiat"
-                placeholder="Podaj powiat"
+                data={districts}
+                placeholder="Wybierz powiat"
                 required
                 mt="md"
                 {...form.getInputProps("district")}
@@ -150,9 +166,10 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
                 mt="md"
                 {...form.getInputProps("postalCode")}
               />
-              <TextInput
-                label="Typ atrakcji"
-                placeholder="Podaj typ atrakcji"
+              <Select
+                label="Typ Atrakcji"
+                data={attractionTypes.map((attr) => attr.attractionType)}
+                placeholder="Wybierz typ atrakcji"
                 required
                 mt="md"
                 {...form.getInputProps("attractionType")}

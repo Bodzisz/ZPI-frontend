@@ -2,6 +2,7 @@ import { getApiUrl, getDefaultResponseHandler } from "./apiConfig";
 import { Attraction, AttractionList } from "./interfaces/Attraction";
 import { AttractionLocation } from "./interfaces/AttractionLocation";
 import { AttracionPicture } from "./interfaces/AttractionPicture";
+import { AttractionType } from "./interfaces/AttractionType";
 import {
   AuthRequest,
   RegisterRequest,
@@ -89,10 +90,10 @@ export const fetchAttractionsByType = async (
   types: string[],
   page: number
 ): Promise<AttractionList> => {
-  const typesString = types.join(',');
-  return fetch(`${apiUrl}attractions/list?types=${typesString}&page=${page}`, { method: "GET" }).then(
-    getDefaultResponseHandler
-  );
+  const typesString = types.join(",");
+  return fetch(`${apiUrl}attractions/list?types=${typesString}&page=${page}`, {
+    method: "GET",
+  }).then(getDefaultResponseHandler);
 };
 
 export const fetchAttractionsByCity = async (
@@ -118,11 +119,15 @@ export const addAttraction = async (
 };
 
 export const fetchAttractionsType = async (
-  query: string,
-  
+  query: string
 ): Promise<AttractionList> => {
-  return fetch(`${apiUrl}attractions/list?cities=${query}`, { method: "GET" }).then(
+  return fetch(`${apiUrl}attractions/list?cities=${query}`, {
+    method: "GET",
+  }).then(getDefaultResponseHandler);
+};
+
+export const fetchAttractionsTypes = async (): Promise<AttractionType[]> => {
+  return fetch(`${apiUrl}attractions/types`, { method: "GET" }).then(
     getDefaultResponseHandler
   );
 };
-

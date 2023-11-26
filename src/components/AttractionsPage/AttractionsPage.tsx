@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { AttractionCard } from "../AttractionCard/AttractionCard";
-import { fetchAtrractionsByPage, fetchAttractionsByType } from "../../api/apiFetchRequests";
+import {
+  fetchAtrractionsByPage,
+  fetchAttractionsByType,
+  fetchAttractionsTypes,
+} from "../../api/apiFetchRequests";
 import { FetchError } from "../../api/interfaces/FetchError";
 import { AttractionList } from "../../api/interfaces/Attraction";
 import {
@@ -9,11 +13,12 @@ import {
   Center,
   Container,
   Pagination,
-  Select
+  Select,
 } from "@mantine/core";
 import { useWindowScroll } from "@mantine/hooks";
 import ServerError from "../ServerError/ServerError";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
+import { AttractionType } from "../../api/interfaces/AttractionType";
 
 const starterAttractionList: AttractionList = {
   content: [],
@@ -24,8 +29,6 @@ const starterAttractionList: AttractionList = {
   numberOfElements: 0,
 };
 
-const attractionTypesMock = ["Przyroda", "Zabytki", "Aktywność", "Muzea"]
-
 const AttractionsPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorStatus, setErorrStatus] = useState<number | null>(null);
@@ -33,19 +36,26 @@ const AttractionsPage = () => {
     starterAttractionList
   );
   const [activePage, setActivePage] = useState<number>(0);
-  const [attractionTypes, setAttractionTypes] = useState<string[]>([]); 
-  const [selectedAttractionType, setSelectedAttractionType] = useState<string | null>(null); // State to store the selected attraction type
+  const [attractionTypes, setAttractionTypes] = useState<AttractionType[]>([]);
+  const [selectedAttractionType, setSelectedAttractionType] = useState<
+    string | null
+  >(null); // State to store the selected attraction type
   const [, scrollTo] = useWindowScroll();
 
   const { setSelectedAttraction } = useSelectedAttractionContext();
 
   useEffect(() => {
-    // fetch attraction types
-    setAttractionTypes(attractionTypesMock)
+    fetchAttractionsTypes()
+      .then((data) => {
+        setAttractionTypes(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   useEffect(() => {
-    if(selectedAttractionType){
+    if (selectedAttractionType) {
       setIsLoading(true);
       fetchAttractionsByType([selectedAttractionType], activePage)
         .then((data: any) => {
@@ -60,9 +70,8 @@ const AttractionsPage = () => {
     }
   }, [selectedAttractionType]);
 
-
   useEffect(() => {
-    if(selectedAttractionType){
+    if (selectedAttractionType) {
       setIsLoading(true);
       fetchAttractionsByType([selectedAttractionType], activePage)
         .then((data: any) => {
@@ -74,18 +83,18 @@ const AttractionsPage = () => {
         .finally(() => {
           setIsLoading(false);
         });
-    }else{
-    setIsLoading(true);
-    fetchAtrractionsByPage(activePage)
-      .then((data) => {
-        setAttractions(data);
-      })
-      .catch((error: FetchError) => {
-        setErorrStatus(error.status);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    } else {
+      setIsLoading(true);
+      fetchAtrractionsByPage(activePage)
+        .then((data) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   }, [activePage]);
 
@@ -112,7 +121,9 @@ const AttractionsPage = () => {
                 <AttractionCard
                   attraction={attraction}
                   key={attraction.id}
-                  onLookUp = {() => {setSelectedAttraction(attraction.id)}}
+                  onLookUp={() => {
+                    setSelectedAttraction(attraction.id);
+                  }}
                 ></AttractionCard>
               );
             })}
@@ -152,17 +163,20 @@ const AttractionsPage = () => {
 
   return (
     <div style={{ height: "100vh", paddingTop: "30px" }}>
-       <div style={{ paddingBottom: "50px" }}>
-      <Container>
-        <Select
-          data={attractionTypes}
-          placeholder="Wybierz typ atrakcji"
-          value={selectedAttractionType}
-          onChange={(value: string | null) => handleAttractionTypeChange(value)}
-        />
-      </Container>
+      <div style={{ paddingBottom: "50px" }}>
+        <Container>
+          <Select
+            data={attractionTypes.map((attr) => attr.attractionType)}
+            placeholder="Wybierz typ atrakcji"
+            value={selectedAttractionType}
+            onChange={(value: string | null) =>
+              handleAttractionTypeChange(value)
+            }
+          />
+        </Container>
       </div>
-      {getContent()}</div>
+      {getContent()}
+    </div>
   );
 };
 
