@@ -79,7 +79,6 @@ const AttractionDeleteModal = ({
     <Modal
       opened={opened}
       onClose={() => setOpened(false)}
-      zIndex={1000}
       title="Potwierdzenie"
       centered
     >

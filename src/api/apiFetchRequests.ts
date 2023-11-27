@@ -172,6 +172,22 @@ export const deleteAttraction = async (
     checkResponseStatus(res);
   });
 };
+
+export const editAttraction = async (
+  attractionId: number,
+  attraction: NewAttraction,
+  token: string
+): Promise<Attraction> => {
+  return fetch(`${apiUrl}attractions/${attractionId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(attraction),
+  }).then(getDefaultResponseHandler);
+};
+
 export const deleteComment = async (
   id: number,
   user: User
