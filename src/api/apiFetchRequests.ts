@@ -8,6 +8,7 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from "./interfaces/Auth";
+import { CommentList, MyComment, NewMyComment, RatingList, NewRating } from "./interfaces/Comment";
 import { District } from "./interfaces/District";
 import { NewAttraction } from "./interfaces/NewAttraction";
 import { User } from "./interfaces/User";
@@ -131,3 +132,71 @@ export const fetchAttractionsTypes = async (): Promise<AttractionType[]> => {
     getDefaultResponseHandler
   );
 };
+
+export const fetchAttractionsCommentsByID = async (
+  id: number
+): Promise<CommentList> => {
+  return fetch(`${apiUrl}comments/attraction/${id}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
+export const fetchAttractionsRatingsByID = async (
+  id: number
+): Promise<RatingList> => {
+  return fetch(`${apiUrl}ratings/attraction/${id}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
+export const deleteComment = async (
+  id: number,
+  user: User
+): Promise<MyComment> => {
+  console.log("KURWA" + id)
+  const response = await fetch(`${apiUrl}comments/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user.token}`,
+    },
+    body: JSON.stringify(id),
+  }).then(getDefaultResponseHandler);
+
+  return response;
+};
+
+
+export const addAttractionComment = async (
+  newComment: NewMyComment,
+  user: User
+): Promise<MyComment> => {
+  const response = await fetch(`${apiUrl}comments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user.token}`,
+    },
+    body: JSON.stringify(newComment),
+  }).then(getDefaultResponseHandler);
+
+  return response;
+};
+
+
+export const addAttractionRating = async (
+  newRating: NewRating,
+  user: User
+): Promise<MyComment> => {
+  const response = await fetch(`${apiUrl}ratings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${user.token}`,
+    },
+    body: JSON.stringify(newRating),
+  }).then(getDefaultResponseHandler);
+
+  return response;
+};
+
