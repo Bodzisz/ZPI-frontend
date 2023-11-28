@@ -18,12 +18,13 @@ import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { IconCloudUpload, IconX, IconDownload } from "@tabler/icons-react";
 import { FileWithPath } from "react-dropzone-esm";
-import { addAttraction } from "../../api/apiFetchRequests";
+import { addAttraction, editAttraction } from "../../api/apiFetchRequests";
 import { User } from "../../api/interfaces/User";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 import { AttractionType } from "../../api/interfaces/AttractionType";
 import { fetchAttractionsTypes } from "../../api/apiFetchRequests";
 import { districts } from "../../util/Districts";
+import { Attraction } from "../../api/interfaces/Attraction";
 
 interface MarkerCords {
   _latlng: {
@@ -34,6 +35,9 @@ interface MarkerCords {
 
 interface AddAttractionPageProps {
   user: User | null;
+  attraction?: Attraction;
+  addNew?: boolean;
+  refresh?: Function;
 }
 
 function arrayBufferToBase64(buffer: ArrayBuffer) {
@@ -46,9 +50,30 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   return window.btoa(binary);
 }
 
-const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
+const AddAttractionPage = ({
+  user,
+  attraction = {
+    id: -1,
+    title: "",
+    type: "",
+    description: "",
+    picture: "",
+    attractionType: "",
+    district: "",
+    city: "",
+    postalCode: "",
+    xcoordinate: 51.167506,
+    ycoordinate: 16.595754,
+  },
+  addNew = true,
+  refresh = () => {},
+}: AddAttractionPageProps) => {
+  console.log(attraction);
   const [active, setActive] = useState(0);
-  const [position, setPosition] = useState([51.167506, 16.595754]);
+  const [position, setPosition] = useState([
+    attraction.xcoordinate,
+    attraction.ycoordinate,
+  ]);
   const [picture, setPicture] = useState<FileWithPath | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attractionTypes, setAttractionsTypes] = useState<AttractionType[]>([]);
@@ -56,12 +81,12 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
   const theme = useMantineTheme();
   const form = useForm({
     initialValues: {
-      district: "",
-      cityName: "",
-      postalCode: "",
-      attractionType: "",
-      title: "",
-      description: "",
+      district: attraction.district,
+      cityName: attraction.city,
+      postalCode: attraction.postalCode,
+      attractionType: attraction.attractionType,
+      title: attraction.title,
+      description: attraction.description,
     },
     validate: {
       postalCode: (value) =>
@@ -122,6 +147,45 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
           });
       }
     });
+  };
+
+  const sendEditRequest = (pictureString: string | null) => {
+    if (user !== null) {
+      editAttraction(
+        attraction.id,
+        {
+          title: form.values.title,
+          district: form.values.district,
+          cityName: form.values.cityName,
+          postalCode: form.values.postalCode,
+          description: form.values.description,
+          attractionType: form.values.attractionType,
+          xCoordinate: position[0],
+          yCoordinate: position[1],
+          // @ts-ignore
+          picture: pictureString ? pictureString : null,
+        },
+        user.token
+      )
+        .then(() => {
+          refresh();
+          setError(null);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const handleAttractionEditing = () => {
+    if (picture) {
+      picture.arrayBuffer().then((ab) => {
+        const pictureString: string = arrayBufferToBase64(ab);
+        sendEditRequest(pictureString);
+      });
+    } else {
+      sendEditRequest(null);
+    }
   };
 
   useEffect(() => {
@@ -226,6 +290,14 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
             </Center>
           </Stepper.Step>
           <Stepper.Step label="Zdjęcie" description="Wyślij zdjęcie">
+            {addNew ? (
+              <></>
+            ) : (
+              <Text mb={"sm"}>
+                Wybierz nowe zdjęcie lub kliknij 'dalej' w celu zachowania
+                obecnego zdjęcia
+              </Text>
+            )}
             {picture ? (
               <>
                 <Center mt={"md"} mb={"md"}>
@@ -247,7 +319,6 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
                   >
                     Usuń zdjęcie
                   </Button>
-                  <Button onClick={() => setActive(3)}>Dalej</Button>
                 </Center>
               </>
             ) : (
@@ -304,11 +375,19 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
                     size="md"
                     radius="xl"
                     onClick={() => openRef.current?.()}
+                    variant="outline"
                   >
                     Wybierz plik
                   </Button>
                 </Center>
               </>
+            )}
+            {addNew === false || picture !== null ? (
+              <Center mt={"lg"}>
+                <Button onClick={() => setActive(3)}>Dalej</Button>
+              </Center>
+            ) : (
+              <></>
             )}
           </Stepper.Step>
           <Stepper.Completed>
@@ -324,7 +403,13 @@ const AddAttractionPage = ({ user }: AddAttractionPageProps) => {
               <></>
             )}
             <Center mt={"xl"}>
-              <Button onClick={handleAttractionAdding}>Dodaj</Button>
+              <Button
+                onClick={
+                  addNew ? handleAttractionAdding : handleAttractionEditing
+                }
+              >
+                {addNew ? "Dodaj" : "Edytuj"}
+              </Button>
             </Center>
           </Stepper.Completed>
         </Stepper>

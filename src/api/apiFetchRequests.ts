@@ -1,4 +1,8 @@
-import { getApiUrl, getDefaultResponseHandler } from "./apiConfig";
+import {
+  checkResponseStatus,
+  getApiUrl,
+  getDefaultResponseHandler,
+} from "./apiConfig";
 import { Attraction, AttractionList } from "./interfaces/Attraction";
 import { AttractionLocation } from "./interfaces/AttractionLocation";
 import { AttracionPicture } from "./interfaces/AttractionPicture";
@@ -8,7 +12,13 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from "./interfaces/Auth";
-import { CommentList, MyComment, NewMyComment, RatingList, NewRating } from "./interfaces/Comment";
+import {
+  CommentList,
+  MyComment,
+  NewMyComment,
+  RatingList,
+  NewRating,
+} from "./interfaces/Comment";
 import { District } from "./interfaces/District";
 import { NewAttraction } from "./interfaces/NewAttraction";
 import { User } from "./interfaces/User";
@@ -149,11 +159,39 @@ export const fetchAttractionsRatingsByID = async (
   );
 };
 
+export const deleteAttraction = async (
+  id: number,
+  token: string
+): Promise<void> => {
+  return fetch(`${apiUrl}attractions/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((res) => {
+    checkResponseStatus(res);
+  });
+};
+
+export const editAttraction = async (
+  attractionId: number,
+  attraction: NewAttraction,
+  token: string
+): Promise<Attraction> => {
+  return fetch(`${apiUrl}attractions/${attractionId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(attraction),
+  }).then(getDefaultResponseHandler);
+};
+
 export const deleteComment = async (
   id: number,
   user: User
 ): Promise<MyComment> => {
-  console.log("KURWA" + id)
   const response = await fetch(`${apiUrl}comments/${id}`, {
     method: "DELETE",
     headers: {
@@ -165,7 +203,6 @@ export const deleteComment = async (
 
   return response;
 };
-
 
 export const addAttractionComment = async (
   newComment: NewMyComment,
@@ -183,7 +220,6 @@ export const addAttractionComment = async (
   return response;
 };
 
-
 export const addAttractionRating = async (
   newRating: NewRating,
   user: User
@@ -199,4 +235,3 @@ export const addAttractionRating = async (
 
   return response;
 };
-

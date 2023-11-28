@@ -61,7 +61,7 @@ export default function App() {
           value={{ selectedAttraction, setSelectedAttraction }}
         >
           {" "}
-          <AttractionView attraction={selectedAttraction} user={user}></AttractionView>
+          <AttractionView attraction={selectedAttraction}></AttractionView>
         </SelectedAttractionContext.Provider>
       );
     }

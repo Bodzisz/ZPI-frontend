@@ -79,8 +79,8 @@ const AppHeader = ({
                     : classes.link
                 }
                 onClick={() => {
-                  setSelectedTab(page.id);
                   setSelectedAttraction(null);
+                  setSelectedTab(page.id);
                 }}
                 key={page.id}
               >
@@ -96,10 +96,23 @@ const AppHeader = ({
     if (user === null) {
       return (
         <>
-          <Button variant="default" onClick={() => setSelectedTab(6)}>
+          <Button
+            variant="default"
+            onClick={() => {
+              setSelectedAttraction(null);
+              setSelectedTab(6);
+            }}
+          >
             Logowanie
           </Button>
-          <Button onClick={() => setSelectedTab(7)}>Rejestracja</Button>
+          <Button
+            onClick={() => {
+              setSelectedAttraction(null);
+              setSelectedTab(7);
+            }}
+          >
+            Rejestracja
+          </Button>
         </>
       );
     } else {
@@ -111,6 +124,7 @@ const AppHeader = ({
           </Text>
           <Button
             onClick={() => {
+              setSelectedAttraction(null);
               logout();
               setUser(null);
               setSelectedTab(1);

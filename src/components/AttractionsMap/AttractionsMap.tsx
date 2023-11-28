@@ -144,9 +144,11 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
               ? {
                   height: 340,
                   width: 500,
+                  zIndex: 0,
                 }
               : {
                   height: "calc(100vh - 155px)",
+                  zIndex: 0,
                 }
           }
         >
