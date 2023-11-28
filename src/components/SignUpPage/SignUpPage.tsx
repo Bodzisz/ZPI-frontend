@@ -85,7 +85,7 @@ const SignUpPage = ({ setSelectedTab }: { setSelectedTab: Function }) => {
             <Title order={2}>Udało Ci się zarejestować!</Title>
           </Center>
           <Center pt={20}>
-            <Button onClick={() => setSelectedTab(5)}>
+            <Button onClick={() => setSelectedTab(6)}>
               Przejdź do logowania
             </Button>
           </Center>
