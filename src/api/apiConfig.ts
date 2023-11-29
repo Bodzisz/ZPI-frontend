@@ -26,5 +26,6 @@ export const getDefaultResponseHandler = async (
     throw error;
   }
   // checkResponseStatus(response);
+  
   return response.json();
 };

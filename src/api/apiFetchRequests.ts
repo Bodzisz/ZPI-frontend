@@ -107,6 +107,22 @@ export const fetchAttractionsByType = async (
   }).then(getDefaultResponseHandler);
 };
 
+export const fetchAtrractionsByRating = async (
+  page: number
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/listWithRating?page=${page}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
+export const fetchAttractionsBySortedName = async (
+  page: number
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/listByName?page=${page}?`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
 export const fetchAttractionsByCity = async (
   query: string
 ): Promise<AttractionList> => {
@@ -234,4 +250,21 @@ export const addAttractionRating = async (
   }).then(getDefaultResponseHandler);
 
   return response;
+};
+
+export const checkAuthentication = async (token: string): Promise<boolean> => {
+  const result: boolean = await fetch(`${apiUrl}auth/check`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      checkResponseStatus(res);
+      return true;
+    })
+    .catch(() => {
+      return false;
+    });
+  return result;
 };
