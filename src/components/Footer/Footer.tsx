@@ -3,11 +3,11 @@ import "./Footer.css";
 import logo from "../../img/logo.png";
 
 const links = [
-  { link: "#", label: "Zgłoś awarię" },
-  { link: "#", label: "Zgłoś nadużycie" },
-  { link: "#", label: "Kontakt" },
-  { link: "#", label: "O autorach" },
-  { link: "#", label: "Coś więcej nw" },
+  { link: "#", label: "ZPI" },
+  { link: "#", label: "K.Wójcicki" },
+  { link: "#", label: "H.Budny" },
+  { link: "#", label: "J.Stankiewicz" },
+  { link: "#", label: "F.Brzeziak" },
 ];
 
 export function FooterCentered() {
