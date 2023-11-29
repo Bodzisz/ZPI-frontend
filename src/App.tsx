@@ -8,7 +8,6 @@ import {
 } from "@mantine/core";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { checkResponseStatus, getApiUrl } from "./api/apiConfig";
 import AppHeader from "./components/AppHeader/AppHeader";
 import LandingPage from "./components/LandingPage/LandingPage";
 import "@mantine/core/styles.css";
@@ -20,10 +19,11 @@ import AttractionsMap from "./components/AttractionsMap/AttractionsMap";
 import LoginPage from "./components/LoginPage/LoginPage";
 import SignUpPage from "./components/SignUpPage/SignUpPage";
 import { User } from "./api/interfaces/User";
-import { getUser } from "./util/User";
+import { getUser, logout } from "./util/User";
 import AttractionView from "./components/AttractionSingleView/AttractionView";
 import { SelectedAttractionContext } from "./SelectedAttractionContext";
 import AddAttractionPage from "./components/AddAttractionPage/AddAttractionPage";
+import { checkAuthentication } from "./api/apiFetchRequests";
 
 const theme = createTheme({
   primaryColor: "cyan",
@@ -47,7 +47,15 @@ export default function App() {
   );
 
   useEffect(() => {
-    logApiHealth();
+    if (user !== null) {
+      checkAuthentication(user.token).then((result: boolean) => {
+        if (!result) {
+          logout();
+          setUser(null);
+          setSelectedTab(1);
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -113,21 +121,6 @@ export default function App() {
       default:
         return <></>;
     }
-  };
-
-  const logApiHealth = (): void => {
-    const apiUrl = getApiUrl();
-    console.log(`API URL: ${apiUrl}`);
-    fetch(apiUrl + "health", {
-      method: "GET",
-    })
-      .then((response) => {
-        checkResponseStatus(response);
-        console.log("API health: OK");
-      })
-      .catch(() => {
-        console.log("API health: ERROR");
-      });
   };
 
   return (

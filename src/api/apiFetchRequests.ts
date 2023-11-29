@@ -235,3 +235,20 @@ export const addAttractionRating = async (
 
   return response;
 };
+
+export const checkAuthentication = async (token: string): Promise<boolean> => {
+  const result: boolean = await fetch(`${apiUrl}auth/check`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => {
+      checkResponseStatus(res);
+      return true;
+    })
+    .catch(() => {
+      return false;
+    });
+  return result;
+};
