@@ -12,6 +12,7 @@ import {
   Input,
   Paper,
   Title,
+  useMantineTheme,
 } from "@mantine/core";
 import { Attraction } from "../../api/interfaces/Attraction";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
@@ -37,6 +38,7 @@ import { User } from "../../api/interfaces/User";
 import { getUser } from "../../util/User";
 import AttractionDeleteModal from "./AttractionDeleteModal";
 import AttractionEditModal from "./AttractionEditModal";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface AttractionDetailsProps {
   attraction: number;
@@ -61,6 +63,8 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
   const [editModalOpened, setEditModalOpened] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
   const [refreshToggle, setRefreshToggle] = useState<boolean>(false);
+  const theme = useMantineTheme();
+  const mobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
 
   const handleClick = () => {
     if ("geolocation" in navigator) {
@@ -173,6 +177,7 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setDescription(event.target.value)
             }
+            w={mobile ? "calc(100vw - 20px)" : "none"}
             placeholder="Wpisz komentarz..."
           />
         </div>
@@ -192,7 +197,9 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
           </select>
         </div>
 
-        <Button onClick={handleAddRating}>Dodaj Ocene</Button>
+        <Button mb={mobile ? 100 : 0} onClick={handleAddRating}>
+          Dodaj Ocene
+        </Button>
       </div>
     );
   };
@@ -292,8 +299,6 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
     );
   };
 
-  console.log(comments);
-
   const CommentList: React.FC<{ comments: MyComment[] }> = ({ comments }) => {
     return (
       <div>
@@ -374,30 +379,41 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
         <>
           {" "}
           <div>
-            <Title order={1} size="h1" mt={10} style={{ marginBottom: 10 }}>
-              {fullAttraction?.city}
-            </Title>
-            <Title
-              order={2}
-              size="sm"
-              c="cyan"
-              style={{ marginBottom: 10, marginTop: 10 }}
-            >
-              {fullAttraction?.district}
-            </Title>
-            <Text size="md" c="dimmed" lineClamp={10}>
-              {fullAttraction?.description}
-            </Text>
+            <Container>
+              <Title order={1} size="h1" mt={10} style={{ marginBottom: 10 }}>
+                {fullAttraction?.city}
+              </Title>
+              <Title
+                order={2}
+                size="sm"
+                c="cyan"
+                style={{ marginBottom: 10, marginTop: 10 }}
+              >
+                {fullAttraction?.district}
+              </Title>
+              <Text size="md" c="dimmed" lineClamp={10}>
+                {fullAttraction?.description}
+              </Text>
+            </Container>
             {fullAttraction ? (
-              <div style={{ marginTop: 10 }}>
-                <AttractionsMap attraction={attraction}></AttractionsMap>
+              <div style={{ marginTop: 10, padding: 5 }}>
+                <AttractionsMap
+                  width={"100%"}
+                  attraction={attraction}
+                ></AttractionsMap>
               </div>
             ) : (
               ""
             )}
             {getAdminButtons()}
           </div>
-          <div style={{ width: 600, paddingLeft: 10, paddingTop: 10 }}>
+          <div
+            style={{
+              width: mobile ? "100vw" : 600,
+              paddingLeft: 10,
+              paddingTop: 10,
+            }}
+          >
             <CommentList comments={comments}></CommentList>
             <RatingsList ratings={ratings}></RatingsList>
 
@@ -409,10 +425,10 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", flexDirection: mobile ? "column" : "row" }}>
       <div style={{ marginRight: "20px" }}>
         <Card
-          style={{ width: 600, height: 600 }}
+          style={{ width: mobile ? "100vw" : 600, height: 600 }}
           shadow="lg"
           padding="lg"
           radius="md"
@@ -423,7 +439,7 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
             <Image
               src={`data:image/png;base64,${fullAttraction?.picture}`}
               height={450}
-              width={600}
+              width={mobile ? "100vw" : 600}
               alt={fullAttraction?.title}
             />
           </Card.Section>
@@ -461,6 +477,7 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
               onClick={() => {
                 setSelectedAttraction(null);
               }}
+              pl={10}
             >
               Close
             </Button>

@@ -161,7 +161,12 @@ const LandingPage = () => {
           />
         </Center>
       </div>
-      <Container size={"md"} pt={"50px"} className={classes.carouselContainer}>
+      <Container
+        size={"md"}
+        pt={"50px"}
+        pb={"100px"}
+        className={classes.carouselContainer}
+      >
         {getCarousel()}
       </Container>
     </div>

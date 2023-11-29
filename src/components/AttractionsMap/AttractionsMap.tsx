@@ -21,6 +21,7 @@ import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
 
 interface SelectedAttractionContextProps {
   attraction?: number;
+  width?: any;
 }
 
 const AttractionsMap = (props: SelectedAttractionContextProps) => {
@@ -143,7 +144,7 @@ const AttractionsMap = (props: SelectedAttractionContextProps) => {
             props.attraction
               ? {
                   height: 340,
-                  width: 500,
+                  width: props.width ? props.width : 500,
                   zIndex: 0,
                 }
               : {
