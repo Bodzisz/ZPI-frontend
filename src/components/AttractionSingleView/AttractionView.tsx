@@ -11,6 +11,7 @@ import {
   Container,
   Input,
   Paper,
+  Title,
 } from "@mantine/core";
 import { Attraction } from "../../api/interfaces/Attraction";
 import { useSelectedAttractionContext } from "../../SelectedAttractionContext";
@@ -373,16 +374,17 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
         <>
           {" "}
           <div>
-            <Text
+            <Title order={1} size="h1" mt={10} style={{ marginBottom: 10 }}>
+              {fullAttraction?.city}
+            </Title>
+            <Title
+              order={2}
               size="sm"
-              c="dimmed"
+              c="cyan"
               style={{ marginBottom: 10, marginTop: 10 }}
             >
-              <strong>Powiat:</strong> {fullAttraction?.district}
-            </Text>
-            <Text size="sm" c="dimmed" style={{ marginBottom: 10 }}>
-              <strong>Miasto:</strong> {fullAttraction?.city}
-            </Text>
+              {fullAttraction?.district}
+            </Title>
             <Text size="md" c="dimmed" lineClamp={10}>
               {fullAttraction?.description}
             </Text>
