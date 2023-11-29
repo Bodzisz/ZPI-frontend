@@ -81,6 +81,7 @@ const AppHeader = ({
                 onClick={() => {
                   setSelectedAttraction(null);
                   setSelectedTab(page.id);
+                  closeDrawer();
                 }}
                 key={page.id}
               >
@@ -101,6 +102,7 @@ const AppHeader = ({
             onClick={() => {
               setSelectedAttraction(null);
               setSelectedTab(6);
+              closeDrawer();
             }}
           >
             Logowanie
@@ -109,6 +111,7 @@ const AppHeader = ({
             onClick={() => {
               setSelectedAttraction(null);
               setSelectedTab(7);
+              closeDrawer();
             }}
           >
             Rejestracja

@@ -43,3 +43,9 @@
     font-size: rem(18px);
   }
 }
+
+.carousel {
+  @media (max-width: $mantine-breakpoint-sm) {
+    margin-bottom: 300px !important;
+  }
+}
