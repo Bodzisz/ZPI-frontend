@@ -118,7 +118,7 @@ export const fetchAtrractionsByRating = async (
 export const fetchAttractionsBySortedName = async (
   page: number
 ): Promise<AttractionList> => {
-  return fetch(`${apiUrl}attractions/listByName?page=${page}?`, { method: "GET" }).then(
+  return fetch(`${apiUrl}attractions/list?page=${page}&sortedByName=true`, { method: "GET" }).then(
     getDefaultResponseHandler
   );
 };

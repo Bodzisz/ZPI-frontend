@@ -111,7 +111,7 @@ export default function App() {
           </SelectedAttractionContext.Provider>
         );
       case 5:
-        return <CenterTitle>Kontakt</CenterTitle>;
+        return <div><CenterTitle>Kontakt</CenterTitle><CenterTitle>miejscownik@biznes.com</CenterTitle></div>;
       case 6:
         return (
           <LoginPage setSelectedTab={setSelectedTab} setStateUser={setUser} />

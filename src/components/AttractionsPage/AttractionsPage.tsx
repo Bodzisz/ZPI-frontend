@@ -31,7 +31,7 @@ const starterAttractionList: AttractionList = {
   numberOfElements: 0,
 };
 
-const SORT_TYPES = ["Oceny"]
+const SORT_TYPES = ["Oceny", "Nazwy"]
 
 const AttractionsPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
