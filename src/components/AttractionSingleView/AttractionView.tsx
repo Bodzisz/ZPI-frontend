@@ -57,7 +57,7 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
   const [showButton, setShowButton] = useState(true);
 
   const [comments, setComments] = useState<any>([]);
-  const [ratings, setRatings] = useState<Rating[]>([]);
+  const [ratings, setRatings] = useState<any>([]);
   const [averageRating, setAverageRating] = useState<any>([]);
   const [deletionModalOpened, setDeletionModalOpened] =
     useState<boolean>(false);
