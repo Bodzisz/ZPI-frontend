@@ -82,7 +82,7 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
 
   useEffect(() => {
     // Calculate the average rating
-    const sum = ratings.reduce((total, rating) => total + rating.rating, 0);
+    const sum = ratings.reduce((total: any, rating: any) => total + rating.rating, 0);
     const average = ratings.length > 0 ? sum / ratings.length : 0;
     // Update the state with the calculated average rating
     setAverageRating(average);
