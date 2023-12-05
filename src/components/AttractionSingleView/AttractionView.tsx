@@ -58,6 +58,7 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
 
   const [comments, setComments] = useState<any>([]);
   const [ratings, setRatings] = useState<any>([]);
+  const [averageRating, setAverageRating] = useState<any>([]);
   const [deletionModalOpened, setDeletionModalOpened] =
     useState<boolean>(false);
   const [editModalOpened, setEditModalOpened] = useState<boolean>(false);
@@ -80,8 +81,17 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
   }, []);
 
   useEffect(() => {
+    // Calculate the average rating
+    const sum = ratings.reduce((total: any, rating: any) => total + rating.rating, 0);
+    const average = ratings.length > 0 ? sum / ratings.length : 0;
+    // Update the state with the calculated average rating
+    setAverageRating(average);
+  }, [ratings]);
+
+  useEffect(() => {
     fetchAtrractionById(attraction)
       .then((data) => {
+        console.log(data)
         setFullAttraction(data);
       })
       .catch((error: FetchError) => {
@@ -451,11 +461,14 @@ const AttractionDetails: React.FC<AttractionDetailsProps> = ({
             <Badge color="green" variant="light">
               {fullAttraction?.attractionType}
             </Badge>
+          <Badge color="orange" variant="light" >
+            Średnia ocena: {typeof(averageRating) === typeof(0) ? (averageRating==0? "brak ocen": averageRating.toFixed(2)) : "brak ocen"}
+            </Badge>
           </Group>
-
+       
           <div>
             {showButton ? (
-              <button onClick={handleClick}>Get User Location</button>
+              <button onClick={handleClick}>Policz odleglość ode mnie</button>
             ) : (
               <Text size="md" c="dimmed" lineClamp={10}>
                 Jesteś {distanceFromUser} kilometrów od celu

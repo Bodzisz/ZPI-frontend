@@ -107,6 +107,22 @@ export const fetchAttractionsByType = async (
   }).then(getDefaultResponseHandler);
 };
 
+export const fetchAtrractionsByRating = async (
+  page: number
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/listWithRating?page=${page}`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
+export const fetchAttractionsBySortedName = async (
+  page: number
+): Promise<AttractionList> => {
+  return fetch(`${apiUrl}attractions/list?page=${page}&sortedByName=true`, { method: "GET" }).then(
+    getDefaultResponseHandler
+  );
+};
+
 export const fetchAttractionsByCity = async (
   query: string
 ): Promise<AttractionList> => {

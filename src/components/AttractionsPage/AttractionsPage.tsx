@@ -4,6 +4,8 @@ import {
   fetchAtrractionsByPage,
   fetchAttractionsByType,
   fetchAttractionsTypes,
+  fetchAtrractionsByRating,
+  fetchAttractionsBySortedName
 } from "../../api/apiFetchRequests";
 import { FetchError } from "../../api/interfaces/FetchError";
 import { AttractionList } from "../../api/interfaces/Attraction";
@@ -29,6 +31,8 @@ const starterAttractionList: AttractionList = {
   numberOfElements: 0,
 };
 
+const SORT_TYPES = ["Oceny", "Nazwy"]
+
 const AttractionsPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorStatus, setErorrStatus] = useState<number | null>(null);
@@ -38,6 +42,9 @@ const AttractionsPage = () => {
   const [activePage, setActivePage] = useState<number>(0);
   const [attractionTypes, setAttractionTypes] = useState<AttractionType[]>([]);
   const [selectedAttractionType, setSelectedAttractionType] = useState<
+    string | null
+  >(null); // State to store the selected attraction type
+  const [selectedSortType, setSelectedSortType] = useState<
     string | null
   >(null); // State to store the selected attraction type
   const [, scrollTo] = useWindowScroll();
@@ -68,7 +75,63 @@ const AttractionsPage = () => {
           setIsLoading(false);
         });
     }
+    else{
+      setIsLoading(true);
+      fetchAtrractionsByPage(activePage)
+        .then((data) => {
+          
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
   }, [selectedAttractionType]);
+
+  useEffect(() => {
+    if (selectedSortType) {
+      setIsLoading(true);
+      if(selectedSortType=== SORT_TYPES[0]){
+        fetchAtrractionsByRating( activePage)
+        .then((data: any) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+      }else{
+        fetchAttractionsBySortedName( activePage)
+        .then((data: any) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+      }}else {
+        setIsLoading(true);
+      fetchAtrractionsByPage(activePage)
+        .then((data) => {
+          
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+      }
+      
+  }, [selectedSortType]);
 
   useEffect(() => {
     if (selectedAttractionType) {
@@ -83,10 +146,36 @@ const AttractionsPage = () => {
         .finally(() => {
           setIsLoading(false);
         });
-    } else {
+    } else if(selectedSortType){
+      setIsLoading(true);
+      if(selectedSortType=== SORT_TYPES[0]){
+        fetchAtrractionsByRating( activePage)
+        .then((data: any) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+      }else{
+        fetchAttractionsBySortedName( activePage)
+        .then((data: any) => {
+          setAttractions(data);
+        })
+        .catch((error: FetchError) => {
+          setErorrStatus(error.status);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+      }
+    } else{
       setIsLoading(true);
       fetchAtrractionsByPage(activePage)
         .then((data) => {
+          
           setAttractions(data);
         })
         .catch((error: FetchError) => {
@@ -166,11 +255,22 @@ const AttractionsPage = () => {
       <div style={{ paddingBottom: "50px" }}>
         <Container>
           <Select
+            
             data={attractionTypes.map((attr) => attr.attractionType)}
             placeholder="Wybierz typ atrakcji"
             value={selectedAttractionType}
+            disabled={selectedSortType !== null}
             onChange={(value: string | null) =>
               handleAttractionTypeChange(value)
+            }
+          />
+          <Select
+            data={SORT_TYPES.map((sort_type) => sort_type)}
+            placeholder="Wybierz tryb sortowania"
+            value={selectedSortType}
+            disabled={selectedAttractionType !== null}
+            onChange={(value: string | null) =>
+              setSelectedSortType(value)
             }
           />
         </Container>

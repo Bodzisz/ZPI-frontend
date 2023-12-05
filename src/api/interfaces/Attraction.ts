@@ -10,8 +10,8 @@ export interface Attraction {
   postalCode: string;
   xcoordinate: number;
   ycoordinate: number;
+  avgRating?: number;
 }
-
 export interface AttractionList {
   content: Attraction[];
   totalPages: number;
